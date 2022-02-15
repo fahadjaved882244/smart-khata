@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1033179044092",
+    "project_id": "smart-khata-341312",
+    "storage_bucket": "smart-khata-341312.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033179044092:android:a883d0549442cd02c95f79",
+        "android_client_info": {
+          "package_name": "com.khata.smart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033179044092-2fb20g20puuh78p6l6jfk39d3rkc14b5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.khata.smart",
+            "certificate_hash": "9b4edfa2d65c8e2d41f12a7f1fe14e8a3663d945"
+          }
+        },
+        {
+          "client_id": "1033179044092-p1gm1ta26hr5r5husdtk7qf0mt99bavo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFs7V6_-7pOWpPWCEvDO1OpbWMwwe_u0M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033179044092-p1gm1ta26hr5r5husdtk7qf0mt99bavo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
