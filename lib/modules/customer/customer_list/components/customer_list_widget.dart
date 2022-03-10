@@ -6,6 +6,7 @@ import 'package:khata/modules/components/widgets/custom_list_tile.dart';
 import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/extensions/date_time_extensions.dart';
+import 'package:khata/themes/app_theme.dart';
 
 class CustomerListWidget extends StatelessWidget {
   final List<CustomerModel> customers;
@@ -14,11 +15,6 @@ class CustomerListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final grayColor =
-        Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.5);
-    final greenColor = Theme.of(context).colorScheme.primary;
-    final redColor = Theme.of(context).colorScheme.error;
-
     return ListView.separated(
       itemCount: customers.length,
       itemBuilder: (context, i) {
@@ -33,7 +29,7 @@ class CustomerListWidget extends StatelessWidget {
             name: customers[i].name,
             imageUrl: customers[i].photoUrl,
           ),
-          trailing: _trailingWidget(i, grayColor, redColor, greenColor),
+          trailing: _trailingWidget(i),
         );
       },
       separatorBuilder: (_, __) => const Divider(
@@ -44,8 +40,7 @@ class CustomerListWidget extends StatelessWidget {
     );
   }
 
-  Padding _trailingWidget(
-      int i, Color grayColor, Color redColor, Color greenColor) {
+  Padding _trailingWidget(int i) {
     return Padding(
       padding: const EdgeInsets.only(right: AppSizes.exSmallPadding),
       child: Column(
@@ -53,28 +48,28 @@ class CustomerListWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (customers[i].credit == 0)
-            Text(
+            const Text(
               "Clear",
-              style: TextStyle(color: grayColor),
+              style: TextStyle(color: AppColors.darkGray),
             )
           else if (customers[i].credit.isNegative)
-            Text(
+            const Text(
               "Due",
-              style: TextStyle(color: redColor),
+              style: TextStyle(color: AppColors.red),
             )
           else
-            Text(
+            const Text(
               "Paid",
-              style: TextStyle(color: greenColor),
+              style: TextStyle(color: AppColors.green),
             ),
           Text(
             "Rs. ${customers[i].credit.toInt()}",
             style: TextStyle(
               color: customers[i].credit == 0
-                  ? grayColor
+                  ? AppColors.darkGray
                   : customers[i].credit.isNegative
-                      ? redColor
-                      : greenColor,
+                      ? AppColors.red
+                      : AppColors.green,
             ),
           ),
         ],

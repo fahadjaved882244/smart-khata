@@ -10,7 +10,6 @@ class PhoneAuthController extends GetxController {
 
   final RxBool _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
-  set isLoading(bool value) => _isLoading(value);
 
   @override
   void onInit() {
@@ -30,11 +29,12 @@ class PhoneAuthController extends GetxController {
   }
 
   Future<void> onSendCodePressed() async {
-    isLoading = true;
-    await Get.find<AuthController>().phoneAuthentication(
+    _isLoading(true);
+    FocusManager.instance.primaryFocus?.unfocus();
+    final cntrl = Get.find<AuthController>();
+    await cntrl.phoneAuthentication(
       phone: '+92${phoneController.text}',
-      otp: "12312",
     );
-    isLoading = false;
+    _isLoading(false);
   }
 }

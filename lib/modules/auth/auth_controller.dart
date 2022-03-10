@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:khata/data/models/user.dart';
+import 'package:khata/routes/route_names.dart';
 import 'package:khata/services/auth/auth_service.dart';
 import 'package:khata/services/auth/i_auth_provider.dart';
 
@@ -16,11 +17,9 @@ class AuthController extends GetxService with AuthService {
     return _user;
   }
 
-  Future<UserModel?> phoneAuthentication(
-      {required String phone, required String otp}) async {
-    final _user = await _authProvider
-        .phoneAuth(phone: phone, otp: otp)
-        .catchError(handleError);
+  Future<UserModel?> phoneAuthentication({required String phone}) async {
+    final _user =
+        await _authProvider.phoneAuth(phone: phone).catchError(handleError);
     _userModel.value = _user;
     return _user;
   }
@@ -39,7 +38,8 @@ class AuthController extends GetxService with AuthService {
   }
 
   Future<void> logout() async {
-    _userModel.value = null;
     await _authProvider.signOut();
+    _userModel.value = null;
+    Get.offAllNamed(RouteNames.phoneAuthView);
   }
 }

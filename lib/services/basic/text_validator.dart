@@ -18,7 +18,7 @@ class TextValidator {
     if (value != null && value.isNotEmpty) {
       final trimed = value.trim();
       if (int.parse(trimed) <= 0) {
-        return 'Price must not be 0';
+        return 'must not be 0';
       } else {
         return null;
       }

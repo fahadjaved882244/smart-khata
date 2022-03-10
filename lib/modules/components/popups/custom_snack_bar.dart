@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 
 SnackbarController showCustomSnackBar<T>({
@@ -15,17 +14,15 @@ SnackbarController showCustomSnackBar<T>({
       message: message,
       duration: Duration(seconds: isSuccess ? 3 : 5),
       animationDuration: const Duration(milliseconds: 500),
-      borderRadius: AppSizes.buttonRadius,
-      margin: const EdgeInsets.all(AppSizes.exSmallPadding),
-      borderColor: isError
+      backgroundColor: isError
           ? AppColors.red
           : isSuccess
               ? AppColors.green
-              : AppColors.transparent,
+              : AppColors.black,
       icon: isError
-          ? const Icon(Icons.error_outline, color: AppColors.red)
+          ? const Icon(Icons.error_outline, color: AppColors.white)
           : isSuccess
-              ? const Icon(Icons.check, color: AppColors.green)
+              ? const Icon(Icons.check, color: AppColors.white)
               : null,
     ),
   );

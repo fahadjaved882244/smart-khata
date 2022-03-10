@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/data/providers/customer_provider.dart';
@@ -6,8 +8,9 @@ class CustomerListController extends GetxController {
   final CustomerProvider _provider;
   CustomerListController(this._provider);
 
-  final RxList<CustomerModel> _customers = <CustomerModel>[].obs;
-  List<CustomerModel> get customers => _customers;
+  final RxList<CustomerModel> dataList = <CustomerModel>[].obs;
+  List<CustomerModel> get customers => dataList;
+  late final StreamSubscription<List<CustomerModel>> dataStream;
 
   final RxBool _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
@@ -15,13 +18,15 @@ class CustomerListController extends GetxController {
 
   @override
   onInit() {
-    _fetchCustomers();
     super.onInit();
+    subsribeToStream();
   }
 
-  Future<void> _fetchCustomers() async {
+  void subsribeToStream() {
     isLoading = true;
-    _customers.value = await _provider.fetchCustomers() ?? [];
-    isLoading = false;
+    dataStream = _provider.watchAll().listen((event) {
+      dataList.value = event;
+      isLoading = false;
+    });
   }
 }

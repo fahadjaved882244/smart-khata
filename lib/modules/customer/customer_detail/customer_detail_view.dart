@@ -3,9 +3,12 @@ import 'package:get/get.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/modules/components/buttons/custom_filled_button.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
+import 'package:khata/modules/components/widgets/custom_loader.dart';
 import 'package:khata/modules/customer/customer_detail/customer_detail_controller.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
+
+import 'components/bottom_button_bar.dart';
 
 class CustomerDetailView extends GetView<CustomerDetailController> {
   final customer = Get.arguments as CustomerModel;
@@ -13,49 +16,57 @@ class CustomerDetailView extends GetView<CustomerDetailController> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      title: customer.name,
-      noPadding: true,
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.phone_outlined),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.more_vert_outlined),
-        ),
-      ],
-      child: Column(
-        children: [
-          Card(
-            elevation: 5,
-            shape: const RoundedRectangleBorder(),
-            child: SizedBox(
-              height: 120,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: AppSizes.exSmallPadding,
-                  right: AppSizes.exSmallPadding,
-                  bottom: AppSizes.smallPadding,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _totalCard(context, customer.credit),
-                    const SizedBox(height: AppSizes.exSmallPadding),
-                    _buttonBar(),
-                  ],
+    final hasPhNum = customer.phoneNumber != null;
+    return Obx(() {
+      if (!controller.isLoading) {
+        return BaseScaffold(
+          title: customer.name,
+          noPadding: true,
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.phone_outlined),
+            ),
+            IconButton(
+              onPressed: () async {
+                await controller.deleteCustomer(customer.id);
+              },
+              icon: const Icon(Icons.more_vert_outlined),
+            ),
+          ],
+          bottomNavigationBar: BottomButtonBar(customer: customer),
+          child: Column(children: [
+            Card(
+              elevation: 5,
+              shape: const RoundedRectangleBorder(),
+              child: SizedBox(
+                height: customer.credit == 0 ? 80 : 120,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: AppSizes.exSmallPadding,
+                    right: AppSizes.exSmallPadding,
+                    bottom: AppSizes.smallPadding,
+                  ),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (customer.credit != 0)
+                          _totalCard(context, customer.credit),
+                        const SizedBox(height: AppSizes.exSmallPadding),
+                        _buttonBar(hasPhNum),
+                      ]),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ]),
+        );
+      } else {
+        return const CustomLoader();
+      }
+    });
   }
 
-  Flexible _buttonBar() {
+  Flexible _buttonBar(bool hasPhNum) {
     return Flexible(
       flex: 4,
       child: Row(
@@ -80,9 +91,9 @@ class CustomerDetailView extends GetView<CustomerDetailController> {
               borderRadius: AppSizes.cardRadius,
               heightScale: 0,
               text: "WhatsApp",
-              icon: const Icon(
+              icon: Icon(
                 Icons.whatsapp,
-                color: AppColors.green,
+                color: hasPhNum ? AppColors.green : AppColors.darkGray,
               ),
               onPressed: () {},
             ),
@@ -95,9 +106,9 @@ class CustomerDetailView extends GetView<CustomerDetailController> {
               heightScale: 0,
               borderRadius: AppSizes.cardRadius,
               text: "SMS",
-              icon: const Icon(
+              icon: Icon(
                 Icons.sms_rounded,
-                color: AppColors.blue,
+                color: hasPhNum ? AppColors.blue : AppColors.darkGray,
               ),
               onPressed: () {},
             ),
@@ -124,9 +135,7 @@ class CustomerDetailView extends GetView<CustomerDetailController> {
                 "Rs. ${amount.toInt()}",
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     fontWeight: FontWeight.w600,
-                    color: amount.isNegative
-                        ? Theme.of(context).colorScheme.error
-                        : Theme.of(context).colorScheme.primary),
+                    color: amount.isNegative ? AppColors.red : AppColors.green),
               ),
             ],
           ),

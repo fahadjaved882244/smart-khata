@@ -19,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
   final int? maxLines;
   final bool readOnly;
   final Color? fillColor;
+  final bool autofocus;
   const CustomTextFormField({
     Key? key,
     this.controller,
@@ -32,6 +33,7 @@ class CustomTextFormField extends StatelessWidget {
     this.obscureText = false,
     this.enabled = true,
     this.readOnly = false,
+    this.autofocus = false,
     this.errorText,
     this.textInputAction = TextInputAction.next,
     this.onChanged,
@@ -44,6 +46,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autofocus: autofocus,
       controller: controller,
       focusNode: focusNode,
       validator: validator,

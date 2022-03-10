@@ -2,18 +2,18 @@ import 'dart:convert';
 
 class UserModel {
   final String id;
-  final String name;
+  final String? name;
   final String phoneNumber;
   final String? photoUrl;
   final double gave;
   final double got;
   UserModel({
     required this.id,
-    required this.name,
     required this.phoneNumber,
+    this.name,
     this.photoUrl,
-    required this.gave,
-    required this.got,
+    this.gave = 0,
+    this.got = 0,
   });
 
   UserModel copyWith({

@@ -45,7 +45,7 @@ class ContactListView extends GetView<ContactListController> {
       child: CustomListTile(
         title: "Add Contact",
         subtitle: "Tap to add a new contact",
-        onTap: () => Get.toNamed(RouteNames.addContactView),
+        onTap: () => Get.toNamed(RouteNames.addCustomerView),
         leading: AvatarImageText(
           name: "New",
           icon: Icon(

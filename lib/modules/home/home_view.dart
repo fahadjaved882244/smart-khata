@@ -7,7 +7,9 @@ import 'package:khata/modules/home/components/balance_widget.dart';
 import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_sizes.dart';
 
-class HomeView extends StatelessWidget {
+import 'home_controller.dart';
+
+class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
 
   @override
@@ -15,6 +17,12 @@ class HomeView extends StatelessWidget {
     return BaseScaffold(
       noPadding: true,
       titleWidget: const AppLogoText(),
+      actions: [
+        IconButton(
+          onPressed: () async => await controller.logout(),
+          icon: const Icon(Icons.more_vert_outlined),
+        ),
+      ],
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => Get.toNamed(RouteNames.contactListView),
         icon: const Icon(Icons.person_add),

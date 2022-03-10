@@ -6,6 +6,12 @@ import 'package:khata/modules/components/popups/custom_snack_bar.dart';
 class UserProvider {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  Stream<List<UserModel>> watchAll() async* {}
+
+  Future<List<UserModel>?> getAll() async {
+    return null;
+  }
+
   Future<bool> create(UserModel userModel) async {
     try {
       await _firestore.userCollection.doc(userModel.id).set(userModel.toMap());
@@ -18,16 +24,14 @@ class UserProvider {
 
   Future<UserModel?> read(String uid) async {
     try {
-      UserModel? _user;
       final doc = await _firestore.userCollection.doc(uid).get();
       if (doc.data() != null) {
-        _user = UserModel.fromMap(doc.data()!);
+        return UserModel.fromMap(doc.data()!);
       }
-      return _user;
     } on Exception catch (e) {
       showCustomSnackBar(message: "Read_User: $e", isError: true);
-      return null;
     }
+    return null;
   }
 
   Future<bool> update(String id, Map<String, Object?> data) async {

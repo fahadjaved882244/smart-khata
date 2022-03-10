@@ -12,6 +12,14 @@ extension StringX on String {
     return toLowerCase() == 'true';
   }
 
+  String? get nullIfEmpty {
+    return isEmpty ? null : this;
+  }
+
+  double get zeroIfEmpty {
+    return isEmpty ? double.parse("0") : double.parse(this);
+  }
+
   String get spaceCase {
     List<String> list = split("");
     int index = 0;
@@ -31,12 +39,13 @@ extension StringX on String {
     return capWords.isNotEmpty ? capWords.join(" ") : this;
   }
 
-  String? get nullIfEmpty {
-    return isEmpty ? null : this;
-  }
-
-  double get zeroIfEmpty {
-    return isEmpty ? double.parse("0") : double.parse(this);
+  String get formatPhoneNumber {
+    final trimed = trim().replaceAll(" ", "");
+    if (trimed.startsWith('+')) {
+      return trimed;
+    } else {
+      return '+92' + trimed.substring(1);
+    }
   }
 
   List<TextSpan> highlightOccurrences(String? query) {

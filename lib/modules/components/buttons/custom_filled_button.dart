@@ -9,7 +9,7 @@ class CustomFilledButton extends StatelessWidget {
   final bool isTonal;
   final double heightScale;
   final double width;
-  final double? borderRadius;
+  final double borderRadius;
 
   const CustomFilledButton({
     Key? key,
@@ -20,7 +20,7 @@ class CustomFilledButton extends StatelessWidget {
     this.isTonal = false,
     this.heightScale = 1,
     this.width = double.maxFinite,
-    this.borderRadius,
+    this.borderRadius = AppSizes.buttonRadius,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -44,8 +44,7 @@ class CustomFilledButton extends StatelessWidget {
         style: ButtonStyle(
           elevation: MaterialStateProperty.all(elevation),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(borderRadius ?? AppSizes.buttonRadius),
+            borderRadius: BorderRadius.circular(borderRadius),
           )),
           backgroundColor: MaterialStateProperty.all(elevation > 0
               ? Theme.of(context).colorScheme.surface
@@ -53,7 +52,7 @@ class CustomFilledButton extends StatelessWidget {
                   ? Theme.of(context).colorScheme.primary.withOpacity(0.25)
                   : Theme.of(context).colorScheme.primary),
           foregroundColor: MaterialStateProperty.all(elevation > 0
-              ? Theme.of(context).colorScheme.primary
+              ? Theme.of(context).colorScheme.onSurface
               : isTonal
                   ? Theme.of(context).colorScheme.onSurface
                   : Theme.of(context).colorScheme.onPrimary),

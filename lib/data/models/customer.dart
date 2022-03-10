@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CustomerModel {
+  final String id;
   final String name;
   final double credit;
   final String? phoneNumber;
   final String? photoUrl;
   final DateTime? lastActivity;
   CustomerModel({
+    required this.id,
     required this.name,
     required this.credit,
     this.phoneNumber,
@@ -17,6 +19,7 @@ class CustomerModel {
   });
 
   CustomerModel copyWith({
+    String? id,
     String? name,
     String? phoneNumber,
     double? credit,
@@ -24,6 +27,7 @@ class CustomerModel {
     DateTime? lastActivity,
   }) {
     return CustomerModel(
+      id: id ?? this.id,
       name: name ?? this.name,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       credit: credit ?? this.credit,
@@ -34,6 +38,7 @@ class CustomerModel {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'phoneNumber': phoneNumber,
       'credit': credit,
@@ -45,6 +50,7 @@ class CustomerModel {
 
   factory CustomerModel.fromMap(Map<String, dynamic> map) {
     return CustomerModel(
+      id: map['id'],
       name: map['name'],
       phoneNumber: map['phoneNumber'],
       credit: map['credit']?.toDouble() ?? 0.0,
@@ -62,7 +68,7 @@ class CustomerModel {
 
   @override
   String toString() {
-    return 'CustomerModel(name: $name, phoneNumber: $phoneNumber, credit: $credit, photoUrl: $photoUrl, lastActivity: $lastActivity)';
+    return 'CustomerModel(id: $id, name: $name, phoneNumber: $phoneNumber, credit: $credit, photoUrl: $photoUrl, lastActivity: $lastActivity)';
   }
 
   @override
@@ -70,6 +76,7 @@ class CustomerModel {
     if (identical(this, other)) return true;
 
     return other is CustomerModel &&
+        other.id == id &&
         other.name == name &&
         other.phoneNumber == phoneNumber &&
         other.credit == credit &&
@@ -80,6 +87,7 @@ class CustomerModel {
   @override
   int get hashCode {
     return name.hashCode ^
+        id.hashCode ^
         phoneNumber.hashCode ^
         credit.hashCode ^
         photoUrl.hashCode ^

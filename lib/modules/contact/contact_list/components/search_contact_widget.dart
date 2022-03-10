@@ -91,7 +91,7 @@ class _SearchDelegate extends SearchDelegate {
             const SizedBox(height: AppSizes.mediumPadding),
             CustomFilledButton(
               text: "Add Contact",
-              onPressed: () => Get.toNamed(RouteNames.addContactView),
+              onPressed: () => Get.toNamed(RouteNames.addCustomerView),
             ),
           ],
         ),

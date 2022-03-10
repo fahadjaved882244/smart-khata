@@ -3,13 +3,15 @@ import 'package:khata/modules/auth/components/otp_verification/otp_verification_
 import 'package:khata/modules/auth/components/otp_verification/otp_verification_view.dart';
 import 'package:khata/modules/auth/components/phone_auth/phone_auth_binding.dart';
 import 'package:khata/modules/auth/components/phone_auth/phone_auth_view.dart';
-import 'package:khata/modules/contact/add_contact/add_contact_view.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_binding.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_view.dart';
+import 'package:khata/modules/customer/add_customer/add_customer_view.dart';
 import 'package:khata/modules/customer/customer_detail/customer_detail_binding.dart';
 import 'package:khata/modules/customer/customer_detail/customer_detail_view.dart';
 import 'package:khata/modules/home/home_binding.dart';
 import 'package:khata/modules/home/home_view.dart';
+import 'package:khata/modules/transaction/add_transaction/add_transaction_binding.dart';
+import 'package:khata/modules/transaction/add_transaction/add_transaction_view.dart';
 import 'package:khata/routes/route_names.dart';
 
 class AppRoutes {
@@ -37,13 +39,18 @@ class AppRoutes {
       binding: ContactListBinding(),
     ),
     GetPage(
-      name: RouteNames.addContactView,
-      page: () => AddContactView(),
+      name: RouteNames.addCustomerView,
+      page: () => AddCustomerView(),
     ),
     GetPage(
       name: RouteNames.customerDetailView,
       page: () => CustomerDetailView(),
       binding: const CustomerDetailBinding(),
+    ),
+    GetPage(
+      name: RouteNames.addTransactionView,
+      page: () => AddTransactionView(),
+      binding: const AddTransactionBinding(),
     ),
   ];
 }

@@ -15,12 +15,11 @@ class AuthProvider implements IAuthProvider {
 
   @override
   Future<UserModel?> getUser({String? token}) async {
-    UserModel? _user;
     final firebaseUser = _firebaseAuth.currentUser;
     if (firebaseUser != null) {
-      _user = await _firebaseUserProvider.read(firebaseUser.uid);
+      return _firebaseUserProvider.read(firebaseUser.uid);
     }
-    return _user;
+    return null;
   }
 
   @override
@@ -33,29 +32,44 @@ class AuthProvider implements IAuthProvider {
   }
 
   @override
-  Future<UserModel?> phoneAuth({
-    required String phone,
-    required String otp,
-  }) async {
+  Future<UserModel?> phoneAuth({required String phone}) async {
     await _firebaseAuth.verifyPhoneNumber(
       phoneNumber: phone,
       codeSent: (String verificationId, int? resendToken) async {
         final result = await Get.toNamed(RouteNames.otpVerificationView);
-        final String? smsCode = result as String;
+        final String? smsCode = result as String?;
 
         // Create a PhoneAuthCredential with the code
         if (smsCode != null) {
-          final credential = PhoneAuthProvider.credential(
+          final phoneCred = PhoneAuthProvider.credential(
             verificationId: verificationId,
             smsCode: smsCode,
           );
-          await _firebaseAuth.signInWithCredential(credential);
+          final cred = await _firebaseAuth.signInWithCredential(phoneCred);
+          if (cred.user != null) {
+            final _user = UserModel(
+              id: cred.user!.uid,
+              phoneNumber: phone,
+            );
+            _firebaseUserProvider.create(_user);
+            Get.offAllNamed(RouteNames.homeView);
+          }
         } else {
           throw InvalidOTPCode(code: "otp");
         }
       },
       codeAutoRetrievalTimeout: (String verificationId) {},
-      verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {},
+      verificationCompleted: (PhoneAuthCredential phoneCred) async {
+        final cred = await _firebaseAuth.signInWithCredential(phoneCred);
+        if (cred.user != null) {
+          final _user = UserModel(
+            id: cred.user!.uid,
+            phoneNumber: phone,
+          );
+          _firebaseUserProvider.create(_user);
+          Get.offAllNamed(RouteNames.homeView);
+        }
+      },
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
           throw InvalidPhoneException(code: e.code);
@@ -107,7 +121,7 @@ class AuthProvider implements IAuthProvider {
   }
 
   @override
-  Future<void> signOut() async {
-    await _firebaseAuth.signOut();
+  Future<void> signOut() {
+    return _firebaseAuth.signOut();
   }
 }

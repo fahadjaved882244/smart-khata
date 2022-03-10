@@ -10,7 +10,7 @@ abstract class IAuthProvider {
     required Map<String, dynamic> body,
   });
 
-  Future<UserModel?> phoneAuth({required String phone, required String otp});
+  Future<UserModel?> phoneAuth({required String phone});
 
   Future<UserModel?> login({required String email, required String password});
 

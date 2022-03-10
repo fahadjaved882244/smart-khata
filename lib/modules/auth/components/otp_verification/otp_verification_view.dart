@@ -73,10 +73,10 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
           const SizedBox(
               height: AppSizes.mediumPadding + AppSizes.smallPadding),
           CustomFilledButton(
+            text: "Verifiy",
             onPressed: () {
               Get.back<String?>(result: controller.code.value);
             },
-            text: "Verifiy",
           ),
           const SizedBox(height: AppSizes.largePadding),
           Text(

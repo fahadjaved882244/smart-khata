@@ -9,7 +9,6 @@ class BaseScaffold extends StatelessWidget {
   final Widget? bottomNavigationBar;
   final Widget child;
   final bool resizeToAvoidBottomInset;
-  final bool isLoading;
   final bool noPadding;
   final Widget? floatingActionButton;
   const BaseScaffold({
@@ -22,7 +21,6 @@ class BaseScaffold extends StatelessWidget {
     this.bottomNavigationBar,
     this.floatingActionButton,
     this.resizeToAvoidBottomInset = true,
-    this.isLoading = false,
     this.noPadding = false,
   }) : super(key: key);
 
@@ -32,6 +30,7 @@ class BaseScaffold extends StatelessWidget {
         .textTheme
         .titleMedium!
         .copyWith(fontWeight: FontWeight.bold);
+
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       appBar: AppBar(
@@ -44,21 +43,11 @@ class BaseScaffold extends StatelessWidget {
         actions: actions,
       ),
       drawer: drawer,
-      body: Column(
-        children: [
-          if (isLoading) const LinearProgressIndicator(),
-          Expanded(
-            child: IgnorePointer(
-              ignoring: isLoading,
-              child: Padding(
-                padding: noPadding
-                    ? EdgeInsets.zero
-                    : const EdgeInsets.all(AppSizes.smallPadding),
-                child: child,
-              ),
-            ),
-          ),
-        ],
+      body: Padding(
+        padding: noPadding
+            ? EdgeInsets.zero
+            : const EdgeInsets.all(AppSizes.smallPadding),
+        child: child,
       ),
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,

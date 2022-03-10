@@ -41,6 +41,7 @@ class App extends StatelessWidget {
         title: 'Khata App',
         initialRoute:
             userFound ? RouteNames.homeView : RouteNames.phoneAuthView,
+        // initialRoute: RouteNames.homeView,
         getPages: AppRoutes.routes,
         defaultTransition: Transition.fade,
         debugShowCheckedModeBanner: false,

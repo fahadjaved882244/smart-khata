@@ -21,7 +21,7 @@ class ContactListWidget extends StatelessWidget {
           title: contacts[i].name,
           subtitle: contacts[i].phone,
           onTap: () {
-            Get.toNamed(RouteNames.addContactView, arguments: contacts[i]);
+            Get.toNamed(RouteNames.addCustomerView, arguments: contacts[i]);
           },
           leading: AvatarImageText(
             name: contacts[i].name,

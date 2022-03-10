@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:khata/modules/auth/auth_controller.dart';
 import 'package:khata/modules/components/buttons/custom_filled_button.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 
-class BalanceWidget extends StatelessWidget {
+class BalanceWidget extends GetView<AuthController> {
   const BalanceWidget({Key? key}) : super(key: key);
 
   @override
@@ -28,7 +30,7 @@ class BalanceWidget extends StatelessWidget {
                   children: [
                     _creditCard(
                       context,
-                      200,
+                      controller.user!.got,
                       "You Got",
                       Theme.of(context).colorScheme.primaryContainer,
                       Theme.of(context).colorScheme.primary,
@@ -36,7 +38,7 @@ class BalanceWidget extends StatelessWidget {
                     const SizedBox(width: AppSizes.exSmallPadding),
                     _creditCard(
                       context,
-                      400,
+                      controller.user!.gave,
                       "You Gave",
                       Theme.of(context).colorScheme.errorContainer,
                       Theme.of(context).colorScheme.error,
@@ -51,7 +53,8 @@ class BalanceWidget extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _totalCard(context, -450),
+                    _totalCard(
+                        context, controller.user!.got - controller.user!.gave),
                     const SizedBox(width: AppSizes.exSmallPadding),
                     _reportButton(context),
                   ],
@@ -94,10 +97,13 @@ class BalanceWidget extends StatelessWidget {
               Text(
                 "Rs. ${amount.toInt()}",
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: amount.isNegative
-                        ? Theme.of(context).colorScheme.error
-                        : Theme.of(context).colorScheme.primary),
+                      fontWeight: FontWeight.w600,
+                      color: amount == 0
+                          ? AppColors.darkGray
+                          : amount.isNegative
+                              ? AppColors.red
+                              : AppColors.green,
+                    ),
               ),
             ],
           ),
