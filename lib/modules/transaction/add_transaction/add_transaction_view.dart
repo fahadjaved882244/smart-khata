@@ -59,6 +59,8 @@ class AddTransactionView extends GetView<AddTransactionController> {
                             controller: controller.noteController,
                             hintText: "Write note here(optional)",
                             prefixIcon: const Icon(Icons.note_outlined),
+                            keyboardType: TextInputType.text,
+                            maxLines: null,
                           ),
                         ),
                         const SizedBox(width: AppSizes.exSmallPadding),

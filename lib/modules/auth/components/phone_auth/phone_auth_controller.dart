@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:khata/modules/auth/auth_controller.dart';
+import 'package:khata/routes/route_names.dart';
 
 class PhoneAuthController extends GetxController {
   late final TextEditingController phoneController;
@@ -32,9 +33,12 @@ class PhoneAuthController extends GetxController {
     _isLoading(true);
     FocusManager.instance.primaryFocus?.unfocus();
     final cntrl = Get.find<AuthController>();
-    await cntrl.phoneAuthentication(
+    final _user = await cntrl.phoneAuthentication(
       phone: '+92${phoneController.text}',
     );
     _isLoading(false);
+    if (_user != null) {
+      Get.offAllNamed(RouteNames.homeView);
+    }
   }
 }

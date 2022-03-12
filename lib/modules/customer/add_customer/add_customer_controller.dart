@@ -49,8 +49,17 @@ class AddCustomerController extends GetxController {
     final status = await CustomerProvider().create(model);
     _isLoading(false);
     if (status) {
-      Get.offAndToNamed(RouteNames.customerDetailView, arguments: model);
-      // showCustomSnackBar(message: "Customer Added!", isSuccess: true);
+      Get.offAllNamed(
+        RouteNames.customerDetailView,
+        predicate: (route) {
+          if (route.settings.name != null) {
+            return route.settings.name!.getRountingData.route ==
+                RouteNames.homeView;
+          }
+          return false;
+        },
+        arguments: model,
+      );
     }
   }
 }

@@ -10,7 +10,7 @@ class TransactionProvider {
     final snapShots = _firestore
         .customerDoc(customerId)
         .transactionCollection
-        .orderBy("dateTime", descending: true)
+        .orderBy("dateTime", descending: false)
         .snapshots();
     yield* snapShots.map((snapshot) => snapshot.docs
         .map((doc) => TransactionModel.fromMap(doc.data()))
@@ -39,8 +39,9 @@ class TransactionProvider {
         'credit': FieldValue.increment(model.amount),
       });
       if (model.amount.isNegative) {
-        await _firestore.userDoc
-            .update({'gave': FieldValue.increment(model.amount.abs())});
+        await _firestore.userDoc.update(
+          {'gave': FieldValue.increment(model.amount.abs())},
+        );
       } else {
         await _firestore.userDoc
             .update({'got': FieldValue.increment(model.amount.abs())});

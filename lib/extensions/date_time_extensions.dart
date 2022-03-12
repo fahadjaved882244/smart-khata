@@ -24,4 +24,9 @@ extension DateTimeX on DateTime? {
       return DateFormat.yMMMd().format(this!);
     }
   }
+
+  String? get formattedTime {
+    if (this == null) return null;
+    return DateFormat('hh:mm a').format(this!);
+  }
 }

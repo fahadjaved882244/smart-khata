@@ -6,10 +6,9 @@ import 'package:khata/modules/auth/components/phone_auth/phone_auth_view.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_binding.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_view.dart';
 import 'package:khata/modules/customer/add_customer/add_customer_view.dart';
-import 'package:khata/modules/customer/customer_detail/customer_detail_binding.dart';
 import 'package:khata/modules/customer/customer_detail/customer_detail_view.dart';
-import 'package:khata/modules/home/home_binding.dart';
-import 'package:khata/modules/home/home_view.dart';
+import 'package:khata/modules/customer/customer_list/customer_list_binding.dart';
+import 'package:khata/modules/customer/customer_list/customer_list_view.dart';
 import 'package:khata/modules/transaction/add_transaction/add_transaction_binding.dart';
 import 'package:khata/modules/transaction/add_transaction/add_transaction_view.dart';
 import 'package:khata/routes/route_names.dart';
@@ -30,8 +29,8 @@ class AppRoutes {
     ////////
     GetPage(
       name: RouteNames.homeView,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
+      page: () => const CustomerListView(),
+      binding: CustomerListBinding(),
     ),
     GetPage(
       name: RouteNames.contactListView,
@@ -45,7 +44,6 @@ class AppRoutes {
     GetPage(
       name: RouteNames.customerDetailView,
       page: () => CustomerDetailView(),
-      binding: const CustomerDetailBinding(),
     ),
     GetPage(
       name: RouteNames.addTransactionView,

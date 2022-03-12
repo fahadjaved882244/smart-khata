@@ -59,7 +59,7 @@ class CustomerListWidget extends StatelessWidget {
             )
           else
             const Text(
-              "Paid",
+              "Advance",
               style: TextStyle(color: AppColors.green),
             ),
           Text(

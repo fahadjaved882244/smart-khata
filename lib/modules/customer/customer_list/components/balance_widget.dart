@@ -1,70 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:khata/modules/auth/auth_controller.dart';
 import 'package:khata/modules/components/buttons/custom_filled_button.dart';
+import 'package:khata/modules/customer/customer_list/customer_list_controller.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 
-class BalanceWidget extends GetView<AuthController> {
+class BalanceWidget extends GetView<CustomerListController> {
   const BalanceWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5,
-      shape: const RoundedRectangleBorder(),
-      child: SizedBox(
-        height: 130,
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: AppSizes.exSmallPadding,
-            right: AppSizes.exSmallPadding,
-            bottom: AppSizes.smallPadding,
-          ),
-          child: Column(
-            children: [
-              Flexible(
-                flex: 3,
-                fit: FlexFit.tight,
-                child: Row(
-                  children: [
-                    _creditCard(
-                      context,
-                      controller.user!.got,
-                      "You Got",
-                      Theme.of(context).colorScheme.primaryContainer,
-                      Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: AppSizes.exSmallPadding),
-                    _creditCard(
-                      context,
-                      controller.user!.gave,
-                      "You Gave",
-                      Theme.of(context).colorScheme.errorContainer,
-                      Theme.of(context).colorScheme.error,
-                    ),
-                  ],
+    return Obx(() {
+      final got = controller.customers.fold<double>(0.0, ((prev, cus) {
+        if (!cus.credit.isNegative) return prev + cus.credit;
+        return prev;
+      }));
+      final gave = controller.customers.fold<double>(0.0, ((prev, cus) {
+        if (cus.credit.isNegative) return prev + cus.credit.abs();
+        return prev;
+      }));
+      return Card(
+        elevation: 5,
+        shape: const RoundedRectangleBorder(),
+        child: SizedBox(
+          height: 130,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: AppSizes.exSmallPadding,
+              right: AppSizes.exSmallPadding,
+              bottom: AppSizes.smallPadding,
+            ),
+            child: Column(
+              children: [
+                Flexible(
+                  flex: 3,
+                  fit: FlexFit.tight,
+                  child: Row(
+                    children: [
+                      _creditCard(
+                        context,
+                        got,
+                        "You Got",
+                        Theme.of(context).colorScheme.primaryContainer,
+                        Theme.of(context).colorScheme.primary,
+                      ),
+                      const SizedBox(width: AppSizes.exSmallPadding),
+                      _creditCard(
+                        context,
+                        gave,
+                        "You Gave",
+                        Theme.of(context).colorScheme.errorContainer,
+                        Theme.of(context).colorScheme.error,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(height: AppSizes.exSmallPadding),
-              Flexible(
-                flex: 2,
-                fit: FlexFit.tight,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _totalCard(
-                        context, controller.user!.got - controller.user!.gave),
-                    const SizedBox(width: AppSizes.exSmallPadding),
-                    _reportButton(context),
-                  ],
+                const SizedBox(height: AppSizes.exSmallPadding),
+                Flexible(
+                  flex: 2,
+                  fit: FlexFit.tight,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _totalCard(context, got - gave),
+                      const SizedBox(width: AppSizes.exSmallPadding),
+                      _reportButton(context),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Flexible _reportButton(BuildContext context) {

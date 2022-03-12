@@ -3,9 +3,7 @@ import 'package:get/get.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/data/models/transaction.dart';
 import 'package:khata/data/providers/transaction_provider.dart';
-import 'package:khata/extensions/string_extensions.dart';
 import 'package:khata/modules/components/popups/custom_snack_bar.dart';
-import 'package:khata/routes/route_names.dart';
 import 'package:uuid/uuid.dart';
 
 class AddTransactionController extends GetxController {
@@ -49,16 +47,12 @@ class AddTransactionController extends GetxController {
         id: const Uuid().v1(),
         amount: signedAmount,
         dateTime: DateTime.now(),
+        note: noteController.text.isEmpty ? null : noteController.text,
       );
       _isLoading(true);
       await provider.create(customer.id, model);
       _isLoading(false);
-      Get.offNamedUntil(
-        RouteNames.customerDetailView,
-        (route) =>
-            route.settings.name!.getRountingData.route == RouteNames.homeView,
-        arguments: customer,
-      );
+      Get.back();
     } else {
       showCustomSnackBar(message: "Invalid Amount", isError: true);
     }

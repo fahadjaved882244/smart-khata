@@ -6,10 +6,10 @@ Future<bool> showCustomDialog({
   required BuildContext context,
   required String title,
   required String subTitle,
-  String? leftButtonTitle,
+  String? leftButtonTitle = "Yes",
   Color? leftButtonColor = AppColors.errorRed,
   void Function()? leftButtonAction,
-  String? rightButtonTitle,
+  String? rightButtonTitle = "No",
   Color? rightButtonColor = AppColors.blue,
   void Function()? rightButtonAction,
 }) async {

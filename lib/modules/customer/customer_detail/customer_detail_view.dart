@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/customer.dart';
-import 'package:khata/modules/components/buttons/custom_filled_button.dart';
+import 'package:khata/data/providers/customer_provider.dart';
+import 'package:khata/data/providers/transaction_provider.dart';
+import 'package:khata/modules/components/popups/custom_dialog.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
 import 'package:khata/modules/components/widgets/custom_loader.dart';
+import 'package:khata/modules/customer/customer_detail/components/top_customer_card.dart';
 import 'package:khata/modules/customer/customer_detail/customer_detail_controller.dart';
-import 'package:khata/themes/app_sizes.dart';
-import 'package:khata/themes/app_theme.dart';
+import 'package:khata/modules/transaction/transaction_list/transaction_list_view.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'components/bottom_button_bar.dart';
 
-class CustomerDetailView extends GetView<CustomerDetailController> {
+class CustomerDetailView extends StatelessWidget {
   final customer = Get.arguments as CustomerModel;
   CustomerDetailView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final hasPhNum = customer.phoneNumber != null;
+    final controller = Get.put(
+      CustomerDetailController(
+        CustomerProvider(),
+        TransactionProvider(),
+        customer.id,
+      ),
+    );
+
     return Obx(() {
       if (!controller.isLoading) {
         return BaseScaffold(
@@ -24,123 +34,51 @@ class CustomerDetailView extends GetView<CustomerDetailController> {
           noPadding: true,
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (customer.phoneNumber != null &&
+                    await canLaunch('tel:${customer.phoneNumber}')) {
+                  await launch('tel:${customer.phoneNumber}');
+                }
+              },
               icon: const Icon(Icons.phone_outlined),
             ),
-            IconButton(
-              onPressed: () async {
-                await controller.deleteCustomer(customer.id);
-              },
+            PopupMenuButton(
+              initialValue: -1,
               icon: const Icon(Icons.more_vert_outlined),
+              itemBuilder: (context) => const [
+                PopupMenuItem(value: 0, child: Text("Edit")),
+                PopupMenuItem(value: 1, child: Text("Delete"))
+              ],
+              onSelected: (i) async {
+                if (i == 1) {
+                  if (await showCustomDialog(
+                      context: context,
+                      title: "Delete Customer",
+                      subTitle: "Sure, you want to delete this customer?")) {
+                    await controller.deleteCustomer(customer.id);
+                  }
+                }
+              },
             ),
           ],
           bottomNavigationBar: BottomButtonBar(customer: customer),
-          child: Column(children: [
-            Card(
-              elevation: 5,
-              shape: const RoundedRectangleBorder(),
-              child: SizedBox(
-                height: customer.credit == 0 ? 80 : 120,
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: AppSizes.exSmallPadding,
-                    right: AppSizes.exSmallPadding,
-                    bottom: AppSizes.smallPadding,
-                  ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        if (customer.credit != 0)
-                          _totalCard(context, customer.credit),
-                        const SizedBox(height: AppSizes.exSmallPadding),
-                        _buttonBar(hasPhNum),
-                      ]),
-                ),
+          child: Column(
+            children: [
+              TopCustomerCard(
+                customer: customer,
+                credit: controller.transactions
+                    .fold(0.0, (prev, trans) => prev + trans.amount),
               ),
-            ),
-          ]),
+              Expanded(
+                child:
+                    TransactionListView(transactions: controller.transactions),
+              ),
+            ],
+          ),
         );
       } else {
         return const CustomLoader();
       }
     });
-  }
-
-  Flexible _buttonBar(bool hasPhNum) {
-    return Flexible(
-      flex: 4,
-      child: Row(
-        children: [
-          Flexible(
-            child: CustomFilledButton(
-              elevation: 2,
-              heightScale: 0,
-              borderRadius: AppSizes.cardRadius,
-              icon: const Icon(
-                Icons.picture_as_pdf_rounded,
-                color: AppColors.red,
-              ),
-              onPressed: () {},
-            ),
-          ),
-          const SizedBox(width: 8),
-          Flexible(
-            flex: 2,
-            child: CustomFilledButton(
-              elevation: 2,
-              borderRadius: AppSizes.cardRadius,
-              heightScale: 0,
-              text: "WhatsApp",
-              icon: Icon(
-                Icons.whatsapp,
-                color: hasPhNum ? AppColors.green : AppColors.darkGray,
-              ),
-              onPressed: () {},
-            ),
-          ),
-          const SizedBox(width: 8),
-          Flexible(
-            flex: 2,
-            child: CustomFilledButton(
-              elevation: 2,
-              heightScale: 0,
-              borderRadius: AppSizes.cardRadius,
-              text: "SMS",
-              icon: Icon(
-                Icons.sms_rounded,
-                color: hasPhNum ? AppColors.blue : AppColors.darkGray,
-              ),
-              onPressed: () {},
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Flexible _totalCard(BuildContext context, double amount) {
-    return Flexible(
-      flex: 3,
-      fit: FlexFit.tight,
-      child: Card(
-        color: Theme.of(context).colorScheme.surface,
-        child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: AppSizes.smallPadding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(amount.isNegative ? "You Will Get" : "You Will Give"),
-              Text(
-                "Rs. ${amount.toInt()}",
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: amount.isNegative ? AppColors.red : AppColors.green),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
