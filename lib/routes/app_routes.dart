@@ -9,8 +9,10 @@ import 'package:khata/modules/customer/add_customer/add_customer_view.dart';
 import 'package:khata/modules/customer/customer_detail/customer_detail_view.dart';
 import 'package:khata/modules/customer/customer_list/customer_list_binding.dart';
 import 'package:khata/modules/customer/customer_list/customer_list_view.dart';
+import 'package:khata/modules/customer/update_customer/update_customer_view.dart';
 import 'package:khata/modules/transaction/add_transaction/add_transaction_binding.dart';
 import 'package:khata/modules/transaction/add_transaction/add_transaction_view.dart';
+import 'package:khata/modules/transaction/update_transaction/update_transaction_view.dart';
 import 'package:khata/routes/route_names.dart';
 
 class AppRoutes {
@@ -37,6 +39,8 @@ class AppRoutes {
       page: () => const ContactListView(),
       binding: ContactListBinding(),
     ),
+
+    /////
     GetPage(
       name: RouteNames.addCustomerView,
       page: () => AddCustomerView(),
@@ -46,9 +50,19 @@ class AppRoutes {
       page: () => CustomerDetailView(),
     ),
     GetPage(
+      name: RouteNames.updateCustomerView,
+      page: () => UpdateCustomerView(),
+    ),
+
+    ////
+    GetPage(
       name: RouteNames.addTransactionView,
       page: () => AddTransactionView(),
       binding: const AddTransactionBinding(),
+    ),
+    GetPage(
+      name: RouteNames.updateTransactionView,
+      page: () => UpdateTransactionView(),
     ),
   ];
 }

@@ -1,15 +1,17 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:khata/data/models/customer.dart';
 import 'package:khata/data/models/transaction.dart';
 import 'package:khata/data/providers/transaction_provider.dart';
-import 'package:khata/extensions/date_time_extensions.dart';
 import 'package:khata/modules/components/popups/custom_date_picker.dart';
 import 'package:khata/modules/components/popups/custom_snack_bar.dart';
-import 'package:uuid/uuid.dart';
+import 'package:khata/extensions/date_time_extensions.dart';
 
-class AddTransactionController extends GetxController {
-  DateTime datePicked = DateTime.now();
+class UpdateTransactionController extends GetxController {
+  final TransactionModel transaction;
+  UpdateTransactionController(this.transaction);
+
+  late final double oldAmount;
+  late DateTime datePicked;
 
   late final TextEditingController amountController;
   late final TextEditingController dateController;
@@ -23,9 +25,12 @@ class AddTransactionController extends GetxController {
 
   @override
   onInit() {
-    amountController = TextEditingController();
+    oldAmount = transaction.amount;
+    datePicked = transaction.dateTime;
+    amountController =
+        TextEditingController(text: transaction.amount.abs().toString());
     dateController = TextEditingController(text: datePicked.formattedDateRaw);
-    noteController = TextEditingController();
+    noteController = TextEditingController(text: transaction.note);
     super.onInit();
   }
 
@@ -50,19 +55,18 @@ class AddTransactionController extends GetxController {
     }
   }
 
-  Future<void> addTransaction(CustomerModel customer, bool willAdd) async {
+  Future<void> updateTransaction(String customerId) async {
     FocusManager.instance.primaryFocus?.unfocus();
     final amount = double.tryParse(amountController.text);
     if (amount != null) {
-      final signedAmount = willAdd ? amount : amount * -1;
-      final model = TransactionModel(
-        id: const Uuid().v1(),
+      final signedAmount = oldAmount >= 0 ? amount : -amount;
+      final model = transaction.copyWith(
         amount: signedAmount,
         dateTime: datePicked,
         note: noteController.text.isEmpty ? null : noteController.text,
       );
       _isLoading(true);
-      await TransactionProvider.create(customer.id, model);
+      await TransactionProvider.update(customerId, model, oldAmount);
       _isLoading(false);
       Get.back();
     } else {

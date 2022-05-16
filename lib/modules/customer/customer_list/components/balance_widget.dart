@@ -11,23 +11,28 @@ class BalanceWidget extends GetView<CustomerListController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      final got = controller.customers.fold<double>(0.0, ((prev, cus) {
+      final got = controller.dataList.fold<double>(0.0, ((prev, cus) {
         if (!cus.credit.isNegative) return prev + cus.credit;
         return prev;
       }));
-      final gave = controller.customers.fold<double>(0.0, ((prev, cus) {
+      final gave = controller.dataList.fold<double>(0.0, ((prev, cus) {
         if (cus.credit.isNegative) return prev + cus.credit.abs();
         return prev;
       }));
       return Card(
-        elevation: 5,
-        shape: const RoundedRectangleBorder(),
+        elevation: 0,
+        shape: UnderlineInputBorder(
+            borderRadius: BorderRadius.zero,
+            borderSide: BorderSide(
+              width: 2,
+              color: Theme.of(context).colorScheme.outline,
+            )),
         child: SizedBox(
           height: 130,
           child: Padding(
             padding: const EdgeInsets.only(
-              left: AppSizes.exSmallPadding,
-              right: AppSizes.exSmallPadding,
+              left: AppSizes.smallPadding,
+              right: AppSizes.smallPadding,
               bottom: AppSizes.smallPadding,
             ),
             child: Column(

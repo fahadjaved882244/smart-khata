@@ -13,6 +13,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String)? onChanged;
   final void Function(String)? onSubmitted;
+  final void Function()? onTap;
   final String? errorText;
   final TextInputAction textInputAction;
   final String? initialValue;
@@ -38,6 +39,7 @@ class CustomTextFormField extends StatelessWidget {
     this.textInputAction = TextInputAction.next,
     this.onChanged,
     this.onSubmitted,
+    this.onTap,
     this.initialValue,
     this.maxLines,
     this.fillColor,
@@ -59,6 +61,7 @@ class CustomTextFormField extends StatelessWidget {
       keyboardType: keyboardType,
       maxLines: maxLines,
       onChanged: onChanged,
+      onTap: onTap,
       decoration: InputDecoration(
         fillColor: fillColor,
         prefixIcon: prefixIcon,

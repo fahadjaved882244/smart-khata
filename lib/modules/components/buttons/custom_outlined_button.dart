@@ -26,13 +26,13 @@ class CustomOutlinedButton extends StatelessWidget {
       width: width,
       height: heightScale == 0 ? double.maxFinite : AppSizes.tabHeight,
       child: OutlinedButton(
-        child: Text(text),
-        onPressed: onPressed,
         style: ButtonStyle(
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.buttonRadius),
           )),
         ),
+        onPressed: onPressed,
+        child: Text(text),
       ),
     );
   }

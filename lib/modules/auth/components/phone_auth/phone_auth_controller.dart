@@ -33,11 +33,11 @@ class PhoneAuthController extends GetxController {
     _isLoading(true);
     FocusManager.instance.primaryFocus?.unfocus();
     final cntrl = Get.find<AuthController>();
-    final _user = await cntrl.phoneAuthentication(
+    final user = await cntrl.phoneAuthentication(
       phone: '+92${phoneController.text}',
     );
     _isLoading(false);
-    if (_user != null) {
+    if (user != null) {
       Get.offAllNamed(RouteNames.homeView);
     }
   }

@@ -17,7 +17,7 @@ class TextValidator {
   static String? priceValidator(String? value) {
     if (value != null && value.isNotEmpty) {
       final trimed = value.trim();
-      if (int.parse(trimed) <= 0) {
+      if (double.parse(trimed) <= 0) {
         return 'must not be 0';
       } else {
         return null;

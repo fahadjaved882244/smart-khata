@@ -17,14 +17,19 @@ class TopCustomerCard extends StatelessWidget {
     final hasPhNum = customer.phoneNumber != null;
 
     return Card(
-      elevation: 5,
-      shape: const RoundedRectangleBorder(),
+      elevation: 0,
+      shape: UnderlineInputBorder(
+          borderRadius: BorderRadius.zero,
+          borderSide: BorderSide(
+            width: 2,
+            color: Theme.of(context).colorScheme.outline,
+          )),
       child: SizedBox(
         height: credit == 0 ? 80 : 120,
         child: Padding(
           padding: const EdgeInsets.only(
-            left: AppSizes.exSmallPadding,
-            right: AppSizes.exSmallPadding,
+            left: AppSizes.smallPadding,
+            right: AppSizes.smallPadding,
             bottom: AppSizes.smallPadding,
           ),
           child: Column(
@@ -70,9 +75,10 @@ class TopCustomerCard extends StatelessWidget {
               ),
               onPressed: () async {
                 if (hasPhNum &&
-                    await canLaunch(
-                        'whatsapp://send?phone=${customer.phoneNumber}')) {
-                  await launch('whatsapp://send?phone=${customer.phoneNumber}');
+                    await canLaunchUrl(Uri.parse(
+                        'whatsapp://send?phone=${customer.phoneNumber}'))) {
+                  await launchUrl(Uri.parse(
+                      'whatsapp://send?phone=${customer.phoneNumber}'));
                 }
               },
             ),
@@ -91,8 +97,9 @@ class TopCustomerCard extends StatelessWidget {
               ),
               onPressed: () async {
                 if (hasPhNum &&
-                    await canLaunch('sms:${customer.phoneNumber}')) {
-                  await launch('sms:${customer.phoneNumber}');
+                    await canLaunchUrl(
+                        Uri.parse('sms:${customer.phoneNumber}'))) {
+                  await launchUrl(Uri.parse('sms:${customer.phoneNumber}'));
                 }
               },
             ),

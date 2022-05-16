@@ -12,16 +12,16 @@ class AuthController extends GetxService with AuthService {
   UserModel? get user => _userModel.value;
 
   Future<UserModel?> getUser() async {
-    final _user = await _authProvider.getUser();
-    _userModel.value = _user;
-    return _user;
+    final user = await _authProvider.getUser();
+    _userModel.value = user;
+    return user;
   }
 
   Future<UserModel?> phoneAuthentication({required String phone}) async {
-    final _user =
+    final user =
         await _authProvider.phoneAuth(phone: phone).catchError(handleError);
-    _userModel.value = _user;
-    return _user;
+    _userModel.value = user;
+    return user;
   }
 
   Future<bool> updateUser({

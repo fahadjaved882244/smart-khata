@@ -17,7 +17,7 @@ class SearchCustomerWidget extends GetView<CustomerListController> {
       onTap: () {
         showSearch(
           context: context,
-          delegate: _SearchDelegate(controller.customers),
+          delegate: _SearchDelegate(controller.dataList),
         );
       },
       child: const CustomTextFormField(
@@ -69,9 +69,9 @@ class _SearchDelegate extends SearchDelegate {
     }).toList();
 
     if (result.isNotEmpty) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.smallPadding),
-        child: CustomerListWidget(customers: result),
+      return const Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.smallPadding),
+        child: CustomerListWidget(),
       );
     } else {
       return Padding(

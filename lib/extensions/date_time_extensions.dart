@@ -9,8 +9,8 @@ extension DateTimeX on DateTime? {
   }
 
   String? get formattedDate {
-    final now = DateTime.now();
     if (this == null) return null;
+    final now = DateTime.now();
     final x = DateTime(this!.year, this!.month, this!.day)
         .difference(DateTime(now.year, now.month, now.day))
         .inDays;
@@ -23,6 +23,11 @@ extension DateTimeX on DateTime? {
     } else {
       return DateFormat.yMMMd().format(this!);
     }
+  }
+
+  String? get formattedDateRaw {
+    if (this == null) return null;
+    return DateFormat.yMMMd().format(this!);
   }
 
   String? get formattedTime {

@@ -6,6 +6,7 @@ class CustomListTile extends StatelessWidget {
   final String? subtitle;
   final Widget? subtitleWidget;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final bool enabled;
   final Widget? leading;
   final Widget? trailing;
@@ -21,6 +22,7 @@ class CustomListTile extends StatelessWidget {
     this.subtitle,
     this.subtitleWidget,
     this.onTap,
+    this.onLongPress,
     this.tileColor,
     this.enabled = true,
     this.leading,
@@ -63,6 +65,7 @@ class CustomListTile extends StatelessWidget {
             )
           : trailing,
       onTap: onTap,
+      onLongPress: onLongPress,
     );
   }
 }

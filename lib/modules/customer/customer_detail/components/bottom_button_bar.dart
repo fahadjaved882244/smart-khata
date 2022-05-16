@@ -22,20 +22,6 @@ class BottomButtonBar extends StatelessWidget {
             child: SizedBox(
               height: AppSizes.tabHeight,
               child: ElevatedButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.add),
-                    SizedBox(width: 8),
-                    Text("You Got"),
-                  ],
-                ),
-                onPressed: () {
-                  Get.toNamed(
-                    RouteNames.addTransactionView,
-                    arguments: [customer, true],
-                  );
-                },
                 style: ButtonStyle(
                   elevation: MaterialStateProperty.all(3),
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -43,6 +29,20 @@ class BottomButtonBar extends StatelessWidget {
                   )),
                   backgroundColor: MaterialStateProperty.all(AppColors.green),
                   foregroundColor: MaterialStateProperty.all(AppColors.white),
+                ),
+                onPressed: () {
+                  Get.toNamed(
+                    RouteNames.addTransactionView,
+                    arguments: [customer, true],
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.add),
+                    SizedBox(width: 8),
+                    Text("You Got"),
+                  ],
                 ),
               ),
             ),
@@ -52,20 +52,6 @@ class BottomButtonBar extends StatelessWidget {
             child: SizedBox(
               height: AppSizes.tabHeight,
               child: ElevatedButton(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.remove),
-                    SizedBox(width: 8),
-                    Text("You Gave"),
-                  ],
-                ),
-                onPressed: () {
-                  Get.toNamed(
-                    RouteNames.addTransactionView,
-                    arguments: [customer, false],
-                  );
-                },
                 style: ButtonStyle(
                   elevation: MaterialStateProperty.all(3),
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -73,6 +59,20 @@ class BottomButtonBar extends StatelessWidget {
                   )),
                   backgroundColor: MaterialStateProperty.all(AppColors.red),
                   foregroundColor: MaterialStateProperty.all(AppColors.white),
+                ),
+                onPressed: () {
+                  Get.toNamed(
+                    RouteNames.addTransactionView,
+                    arguments: [customer, false],
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.remove),
+                    SizedBox(width: 8),
+                    Text("You Gave"),
+                  ],
                 ),
               ),
             ),

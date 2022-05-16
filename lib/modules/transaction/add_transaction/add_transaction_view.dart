@@ -31,25 +31,37 @@ class AddTransactionView extends GetView<AddTransactionController> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CustomTextFormField(
-                      autofocus: true,
-                      controller: controller.amountController,
-                      hintText: "Enter Amount *",
-                      validator: TextValidator.priceValidator,
-                      keyboardType: TextInputType.number,
-                      prefixIcon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Rs.",
-                            style: TextStyle(
-                              color: color,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    Column(
+                      children: [
+                        CustomTextFormField(
+                          autofocus: true,
+                          controller: controller.amountController,
+                          hintText: "Enter Amount*",
+                          validator: TextValidator.priceValidator,
+                          keyboardType: TextInputType.number,
+                          prefixIcon: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Rs. ",
+                                style: TextStyle(
+                                  color: color,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: AppSizes.smallPadding),
+                        CustomTextFormField(
+                          readOnly: true,
+                          controller: controller.dateController,
+                          prefixIcon: const Icon(Icons.calendar_month_outlined),
+                          suffixIcon: const Icon(Icons.edit_outlined),
+                          onTap: () => controller.updateDate(context),
+                        ),
+                      ],
                     ),
                     Row(
                       children: [

@@ -33,7 +33,7 @@ class AuthProvider implements IAuthProvider {
 
   @override
   Future<UserModel?> phoneAuth({required String phone}) async {
-    UserModel? _user;
+    UserModel? user;
     await _firebaseAuth.verifyPhoneNumber(
       phoneNumber: phone,
       codeSent: (String verificationId, int? resendToken) async {
@@ -48,11 +48,11 @@ class AuthProvider implements IAuthProvider {
           );
           final cred = await _firebaseAuth.signInWithCredential(phoneCred);
           if (cred.user != null) {
-            _user = UserModel(
+            user = UserModel(
               id: cred.user!.uid,
               phoneNumber: phone,
             );
-            await _firebaseUserProvider.create(_user!);
+            await _firebaseUserProvider.create(user!);
             Get.offAllNamed(RouteNames.homeView);
           }
         } else {
@@ -63,11 +63,11 @@ class AuthProvider implements IAuthProvider {
       verificationCompleted: (PhoneAuthCredential phoneCred) async {
         final cred = await _firebaseAuth.signInWithCredential(phoneCred);
         if (cred.user != null) {
-          _user = UserModel(
+          user = UserModel(
             id: cred.user!.uid,
             phoneNumber: phone,
           );
-          await _firebaseUserProvider.create(_user!);
+          await _firebaseUserProvider.create(user!);
           Get.offAllNamed(RouteNames.homeView);
         }
       },
@@ -77,7 +77,7 @@ class AuthProvider implements IAuthProvider {
         }
       },
     );
-    return _user;
+    return user;
   }
 
   @override

@@ -21,27 +21,27 @@ Future<bool> showCustomDialog({
       actions: [
         if (leftButtonTitle != null)
           TextButton(
+            onPressed: leftButtonAction ??
+                () {
+                  Get.back(result: true);
+                },
             child: Text(
               leftButtonTitle,
               style: TextStyle(
                   color: leftButtonColor ?? AppColors.blue, fontSize: 17),
             ),
-            onPressed: leftButtonAction ??
-                () {
-                  Get.back(result: true);
-                },
           ),
         if (rightButtonTitle != null)
           TextButton(
+            onPressed: rightButtonAction ??
+                () {
+                  Get.back(result: false);
+                },
             child: Text(
               rightButtonTitle,
               style: TextStyle(
                   color: rightButtonColor ?? AppColors.blue, fontSize: 17),
             ),
-            onPressed: rightButtonAction ??
-                () {
-                  Get.back(result: false);
-                },
           ),
       ],
     ),

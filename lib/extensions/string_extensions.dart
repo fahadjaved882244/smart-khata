@@ -44,7 +44,7 @@ extension StringX on String {
     if (trimed.startsWith('+')) {
       return trimed;
     } else {
-      return '+92' + trimed.substring(1);
+      return '+92${trimed.substring(1)}';
     }
   }
 

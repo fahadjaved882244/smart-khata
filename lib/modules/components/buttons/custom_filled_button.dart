@@ -30,17 +30,6 @@ class CustomFilledButton extends StatelessWidget {
           ? AppSizes.tabHeight * heightScale
           : double.maxFinite,
       child: ElevatedButton(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (icon != null) ...[
-              icon!,
-              const SizedBox(width: 4),
-            ],
-            if (text != null) Text(text!),
-          ],
-        ),
-        onPressed: onPressed,
         style: ButtonStyle(
           elevation: MaterialStateProperty.all(elevation),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -56,6 +45,17 @@ class CustomFilledButton extends StatelessWidget {
               : isTonal
                   ? Theme.of(context).colorScheme.onSurface
                   : Theme.of(context).colorScheme.onPrimary),
+        ),
+        onPressed: onPressed,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (icon != null) ...[
+              icon!,
+              const SizedBox(width: 4),
+            ],
+            if (text != null) Text(text!),
+          ],
         ),
       ),
     );

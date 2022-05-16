@@ -1,33 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:uuid/uuid.dart';
 
-import 'package:khata/data/models/contact.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/data/providers/customer_provider.dart';
 import 'package:khata/extensions/string_extensions.dart';
 import 'package:khata/routes/route_names.dart';
 
-class AddCustomerController extends GetxController {
-  final ContactModel? contactModel;
-  AddCustomerController(this.contactModel);
+class UpdateCustomerController extends GetxController {
+  final CustomerModel customer;
+  UpdateCustomerController(this.customer);
 
   late final TextEditingController nameController;
   late final TextEditingController phoneController;
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  AutovalidateMode autoValidate = AutovalidateMode.disabled;
 
   final RxBool _isLoading = false.obs;
   bool get isLoading => _isLoading.value;
 
   @override
   void onInit() {
-    nameController = TextEditingController();
-    phoneController = TextEditingController();
-    if (contactModel != null) {
-      nameController.text = contactModel!.name;
-      if (contactModel!.phone != null) {
-        phoneController.text = contactModel!.phone!;
-      }
-    }
+    nameController = TextEditingController(text: customer.name);
+    phoneController = TextEditingController(text: customer.phoneNumber);
     super.onInit();
   }
 
@@ -38,25 +33,25 @@ class AddCustomerController extends GetxController {
     super.onClose();
   }
 
-  Future<void> addCustomer() async {
-    final model = CustomerModel(
-      id: const Uuid().v1(),
+  void updateValidationMode() {
+    autoValidate = AutovalidateMode.onUserInteraction;
+    update(['UPDATE_FORM']);
+  }
+
+  Future<void> updateCustomer() async {
+    final model = customer.copyWith(
       name: nameController.text,
       phoneNumber: phoneController.text.nullIfEmpty?.formatPhoneNumber,
-      credit: 0,
     );
     _isLoading(true);
-    final status = await CustomerProvider.create(model);
+    final status = await CustomerProvider.update(customer.id, model.toMap());
     _isLoading(false);
     if (status) {
-      Get.offAllNamed(
+      Get.offNamedUntil(
         RouteNames.customerDetailView,
-        predicate: (route) {
-          if (route.settings.name != null) {
-            return route.settings.name!.getRountingData.route ==
-                RouteNames.homeView;
-          }
-          return false;
+        (route) {
+          return route.settings.name!.getRountingData.route ==
+              RouteNames.homeView;
         },
         arguments: model,
       );

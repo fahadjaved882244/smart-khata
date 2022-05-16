@@ -4,42 +4,33 @@ import 'package:get/get.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/data/providers/customer_provider.dart';
 import 'package:khata/modules/auth/auth_controller.dart';
+import 'package:khata/modules/components/controllers/i_list_controller.dart';
 
-class CustomerListController extends GetxController {
-  final CustomerProvider _provider;
-  CustomerListController(this._provider);
-
-  final RxList<CustomerModel> dataList = <CustomerModel>[].obs;
-  List<CustomerModel> get customers => dataList;
-  late final StreamSubscription<List<CustomerModel>> dataStream;
-
-  final RxBool _isLoading = false.obs;
-  bool get isLoading => _isLoading.value;
-  set isLoading(bool value) => _isLoading(value);
-
-  @override
-  onInit() {
-    super.onInit();
-    subsribeToStream();
-  }
-
-  @override
-  void onClose() {
-    dataStream.cancel();
-    super.onClose();
-  }
-
+class CustomerListController extends IListController<CustomerModel> {
   Future<void> logout() async {
-    _isLoading(true);
+    isLoading = true;
     Get.find<AuthController>().logout();
-    _isLoading(false);
+    isLoading = false;
   }
 
+  @override
   void subsribeToStream() {
     isLoading = true;
-    dataStream = _provider.watchAll().listen((event) {
-      dataList.value = event;
+    dataStream = CustomerProvider.watchAll().listen((event) {
+      dataList = event;
       isLoading = false;
     });
+  }
+
+  Future<void> deleteSelected() async {
+    isLoading = true;
+    final List<Future> list = [];
+    for (final customer in selectedItems) {
+      list.add(CustomerProvider.delete(customer.id));
+    }
+    isSelectable = false;
+    await Future.wait(list);
+    selectedItems.clear();
+    isLoading = false;
   }
 }

@@ -24,8 +24,8 @@ class ContactListController extends GetxController {
     if (!await FlutterContacts.requestPermission(readonly: true)) {
       _permissionDenied.value = true;
     } else {
-      final _con = await FlutterContacts.getContacts(withProperties: true);
-      _contacts.value = _con.map((c) {
+      final conList = await FlutterContacts.getContacts(withProperties: true);
+      _contacts.value = conList.map((c) {
         return ContactModel(
           name: c.displayName,
           phone: c.phones.isNotEmpty ? c.phones[0].number : null,

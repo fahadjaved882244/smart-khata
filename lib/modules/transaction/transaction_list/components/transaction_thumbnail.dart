@@ -7,8 +7,16 @@ import 'package:khata/extensions/date_time_extensions.dart';
 
 class TransactionThumbnail extends StatelessWidget {
   final TransactionModel transaction;
-  const TransactionThumbnail({Key? key, required this.transaction})
-      : super(key: key);
+  final bool isSelected;
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+  const TransactionThumbnail({
+    Key? key,
+    required this.transaction,
+    required this.isSelected,
+    required this.onTap,
+    required this.onLongPress,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,29 +36,39 @@ class TransactionThumbnail extends StatelessWidget {
           ? EdgeInsets.only(left: Get.width * 0.35)
           : EdgeInsets.only(right: Get.width * 0.35),
       child: Card(
-        elevation: 5,
-        color: AppColors.white,
-        child: Padding(
-          padding: const EdgeInsets.all(AppSizes.smallPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Rs. ${transaction.amount.abs().round().toString()}",
-                style: largeStyle,
-              ),
-              if (transaction.note != null) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(transaction.note!, style: smallStyle),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppSizes.cardRadius),
+          side: const BorderSide(width: 0.5),
+        ),
+        color: isSelected
+            ? Theme.of(context).colorScheme.tertiaryContainer
+            : AppColors.white,
+        child: InkWell(
+          onTap: onTap,
+          onLongPress: onLongPress,
+          child: Padding(
+            padding: const EdgeInsets.all(AppSizes.smallPadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Rs. ${transaction.amount.abs().round().toString()}",
+                  style: largeStyle,
                 ),
+                if (transaction.note != null) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Text(transaction.note!, style: smallStyle),
+                  ),
+                ],
+                const Divider(height: AppSizes.smallPadding),
+                Text(
+                  transaction.dateTime.formattedTime!,
+                  style: smallStyle,
+                )
               ],
-              const Divider(height: AppSizes.smallPadding),
-              Text(
-                transaction.dateTime.formattedTime!,
-                style: smallStyle,
-              )
-            ],
+            ),
           ),
         ),
       ),

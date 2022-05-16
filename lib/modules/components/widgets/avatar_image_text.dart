@@ -20,13 +20,14 @@ class AvatarImageText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double _radius = radius ?? AppSizes.smallIconSize;
+    final double diameter =
+        radius != null ? radius! * 2 : AppSizes.smallIconSize * 2;
 
     return SizedBox(
-      height: _radius * 2,
-      width: _radius * 2,
+      height: diameter,
+      width: diameter,
       child: CircleAvatar(
-        radius: _radius,
+        radius: diameter / 2,
         backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
         child: ClipOval(
           child: imageUrl != null
@@ -38,7 +39,7 @@ class AvatarImageText extends StatelessWidget {
                     name[0].toUpperCase(),
                     style: Theme.of(context).textTheme.bodyText1!.copyWith(
                           color: Theme.of(context).colorScheme.tertiary,
-                          fontSize: _radius * 1,
+                          fontSize: diameter / 2,
                         ),
                   ),
         ),

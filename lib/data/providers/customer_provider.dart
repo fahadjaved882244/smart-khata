@@ -1,33 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/extensions/firebase_extensions.dart';
 import 'package:khata/modules/components/popups/custom_snack_bar.dart';
 
-class CustomerProvider {
-  final _firestore = FirebaseFirestore.instance;
+List<CustomerModel> parseRawList(
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> rawList) {
+  return rawList.map((e) => CustomerModel.fromMap(e.data())).toList();
+}
 
-  Stream<List<CustomerModel>> watchAll() async* {
-    final snapShots = _firestore.userDoc.customerCollection
+Stream<List<CustomerModel>> parseRawStream(
+    Stream<QuerySnapshot<Map<String, dynamic>>> rawStream) {
+  return rawStream.map((snapshot) =>
+      snapshot.docs.map((doc) => CustomerModel.fromMap(doc.data())).toList());
+}
+
+class CustomerProvider {
+  static final _firestore = FirebaseFirestore.instance;
+
+  static Stream<List<CustomerModel>> watchAll() async* {
+    final rawStream = _firestore.userDoc.customerCollection
         .orderBy("lastActivity", descending: true)
         .snapshots();
-    yield* snapShots.map((snapshot) =>
-        snapshot.docs.map((doc) => CustomerModel.fromMap(doc.data())).toList());
+    yield* await compute(parseRawStream, rawStream);
   }
 
-  Future<List<CustomerModel>?> getAll() async {
+  static Future<List<CustomerModel>?> getAll() async {
     try {
-      final snapShot = await _firestore.userDoc.customerCollection.get();
-      final rawList = snapShot.docs;
-      if (rawList.isNotEmpty) {
-        return rawList.map((e) => CustomerModel.fromMap(e.data())).toList();
-      }
+      return _firestore.userDoc.customerCollection
+          .get()
+          .then((value) => compute(parseRawList, value.docs));
     } catch (e) {
       showCustomSnackBar(message: "Get_All_Leads: exception : $e");
     }
     return null;
   }
 
-  Future<bool> create(CustomerModel model) async {
+  static Future<bool> create(CustomerModel model) async {
     try {
       await _firestore.customerDoc(model.id).set(model.toMap());
       return true;
@@ -37,7 +46,7 @@ class CustomerProvider {
     return false;
   }
 
-  Future<CustomerModel?> read(String id) async {
+  static Future<CustomerModel?> read(String id) async {
     try {
       final snapShot = await _firestore.customerDoc(id).get();
       if (snapShot.data() != null) {
@@ -49,7 +58,7 @@ class CustomerProvider {
     return null;
   }
 
-  Future<bool> update(String id, Map<String, Object?> data) async {
+  static Future<bool> update(String id, Map<String, Object?> data) async {
     try {
       await _firestore.customerDoc(id).update(data);
       return true;
@@ -59,7 +68,7 @@ class CustomerProvider {
     }
   }
 
-  Future<bool> delete(String id) async {
+  static Future<bool> delete(String id) async {
     try {
       await _firestore.customerDoc(id).delete();
       return true;

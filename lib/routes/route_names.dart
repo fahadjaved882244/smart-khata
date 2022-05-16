@@ -8,6 +8,8 @@ class RouteNames {
 
   static const String addCustomerView = '/add_customer_view';
   static const String customerDetailView = '/customer_detail_view';
+  static const String updateCustomerView = '/update_customer_view';
 
   static const String addTransactionView = '/add_transaction_view';
+  static const String updateTransactionView = '/update_transaction_view';
 }
