@@ -41,10 +41,11 @@ class CustomerListView extends GetView<CustomerListController> {
                 onSelected: (i) async {
                   if (i == 1) {
                     if (await showCustomDialog(
-                        context: context,
-                        title: "Logout App",
-                        subTitle:
-                            "Sure, you want to logout from smart-khata?")) {
+                      context: context,
+                      title: "Logout App?",
+                      subTitle: "Sure, you want to logout from smart-khata?",
+                      rightButtonTitle: "Logout",
+                    )) {
                       await controller.logout();
                     }
                   }
@@ -62,16 +63,17 @@ class CustomerListView extends GetView<CustomerListController> {
                   controller.selectedItems.clear();
                 },
               ),
-            if (controller.isSelectable &&
-                controller.selectedItems.isNotEmpty) ...[
+            if (controller.isSelectable && controller.selectedItems.isNotEmpty)
               IconButton(
                 icon: const Icon(Icons.delete_outline_rounded),
                 onPressed: () async {
                   if (await showCustomDialog(
-                      context: context,
-                      title: "Delete Customers",
-                      subTitle:
-                          "Sure, you want to delete (${controller.selectedItems.length}) customer?")) {
+                    context: context,
+                    title: "Delete Customers?",
+                    subTitle:
+                        "Sure, you want to delete (${controller.selectedItems.length}) customer?",
+                    rightButtonTitle: "Delete",
+                  )) {
                     await controller.deleteSelected();
                   } else {
                     controller.isSelectable = false;
@@ -79,6 +81,7 @@ class CustomerListView extends GetView<CustomerListController> {
                   }
                 },
               ),
+            if (controller.isSelectable)
               IconButton(
                 onPressed: () {
                   controller.selectedItems.clear();
@@ -86,7 +89,6 @@ class CustomerListView extends GetView<CustomerListController> {
                 },
                 icon: const Icon(Icons.close),
               ),
-            ],
           ],
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () => Get.toNamed(RouteNames.contactListView),

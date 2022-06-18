@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/user.dart';
 import 'package:khata/routes/route_names.dart';
@@ -17,9 +18,18 @@ class AuthController extends GetxService with AuthService {
     return user;
   }
 
-  Future<UserModel?> phoneAuthentication({required String phone}) async {
-    final user =
-        await _authProvider.phoneAuth(phone: phone).catchError(handleError);
+  Future<UserModel?> phoneAuthentication({
+    required String phone,
+    required VoidCallback showLoading,
+    required VoidCallback closeLoading,
+  }) async {
+    final user = await _authProvider
+        .phoneAuth(
+          phone: phone,
+          showLoading: showLoading,
+          closeLoading: closeLoading,
+        )
+        .catchError(handleError);
     _userModel.value = user;
     return user;
   }

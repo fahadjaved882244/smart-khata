@@ -7,6 +7,7 @@ class CustomFilledButton extends StatelessWidget {
   final Widget? icon;
   final double elevation;
   final bool isTonal;
+  final bool isDanger;
   final double heightScale;
   final double width;
   final double borderRadius;
@@ -18,6 +19,7 @@ class CustomFilledButton extends StatelessWidget {
     this.icon,
     this.elevation = 0,
     this.isTonal = false,
+    this.isDanger = false,
     this.heightScale = 1,
     this.width = double.maxFinite,
     this.borderRadius = AppSizes.buttonRadius,
@@ -35,16 +37,24 @@ class CustomFilledButton extends StatelessWidget {
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           )),
-          backgroundColor: MaterialStateProperty.all(elevation > 0
-              ? Theme.of(context).colorScheme.surface
-              : isTonal
-                  ? Theme.of(context).colorScheme.primary.withOpacity(0.25)
-                  : Theme.of(context).colorScheme.primary),
-          foregroundColor: MaterialStateProperty.all(elevation > 0
-              ? Theme.of(context).colorScheme.onSurface
-              : isTonal
-                  ? Theme.of(context).colorScheme.onSurface
-                  : Theme.of(context).colorScheme.onPrimary),
+          backgroundColor: MaterialStateProperty.all(
+            elevation > 0
+                ? Theme.of(context).colorScheme.surface
+                : isTonal
+                    ? Theme.of(context).colorScheme.secondaryContainer
+                    : isDanger
+                        ? Theme.of(context).colorScheme.errorContainer
+                        : Theme.of(context).colorScheme.primary,
+          ),
+          foregroundColor: MaterialStateProperty.all(
+            elevation > 0
+                ? Theme.of(context).colorScheme.onSurface
+                : isTonal
+                    ? Theme.of(context).colorScheme.secondary
+                    : isDanger
+                        ? Theme.of(context).colorScheme.error
+                        : Theme.of(context).colorScheme.onPrimary,
+          ),
         ),
         onPressed: onPressed,
         child: Row(

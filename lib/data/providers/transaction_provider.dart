@@ -19,7 +19,9 @@ Stream<List<TransactionModel>> parseRawStream(
 class TransactionProvider {
   static final _firestore = FirebaseFirestore.instance;
 
-  static Stream<List<TransactionModel>> watchAll(String customerId) async* {
+  static Stream<List<TransactionModel>> watchAll(
+    String customerId,
+  ) async* {
     final rawStream = _firestore
         .customerDoc(customerId)
         .transactionCollection
@@ -41,7 +43,10 @@ class TransactionProvider {
     return null;
   }
 
-  static Future<bool> create(String customerId, TransactionModel model) async {
+  static Future<bool> create(
+    String customerId,
+    TransactionModel model,
+  ) async {
     try {
       await _firestore.transactionDoc(customerId, model.id).set(model.toMap());
       await _firestore.customerDoc(customerId).update({
@@ -56,7 +61,9 @@ class TransactionProvider {
   }
 
   static Future<TransactionModel?> read(
-      String customerId, String transId) async {
+    String customerId,
+    String transId,
+  ) async {
     try {
       final snapShot =
           await _firestore.transactionDoc(customerId, transId).get();
@@ -70,13 +77,16 @@ class TransactionProvider {
   }
 
   static Future<bool> update(
-      String customerId, TransactionModel model, double oldAmount) async {
+    String customerId,
+    String transactionId,
+    Map<String, dynamic> map,
+    double newAmount,
+    double oldAmount,
+  ) async {
     try {
-      await _firestore
-          .transactionDoc(customerId, model.id)
-          .update(model.toMap());
+      await _firestore.transactionDoc(customerId, transactionId).update(map);
       await _firestore.customerDoc(customerId).update({
-        'credit': FieldValue.increment(model.amount - oldAmount),
+        'credit': FieldValue.increment(newAmount - oldAmount),
       });
       return true;
     } catch (e) {
@@ -85,8 +95,28 @@ class TransactionProvider {
     }
   }
 
+  static Future<bool> clear(
+    String customerId,
+    TransactionModel oldModel,
+  ) async {
+    try {
+      await _firestore
+          .transactionDoc(customerId, oldModel.id)
+          .update({"clear": true});
+      final newModel = TransactionModel.fromClearAmount(oldModel.amount);
+      await create(customerId, newModel);
+      return true;
+    } catch (e) {
+      showCustomSnackBar(message: "Clear_Transaction: exception : $e");
+      return false;
+    }
+  }
+
   static Future<bool> delete(
-      String customerId, String transId, double oldAmount) async {
+    String customerId,
+    String transId,
+    double oldAmount,
+  ) async {
     try {
       await _firestore.transactionDoc(customerId, transId).delete();
       await _firestore.customerDoc(customerId).update({

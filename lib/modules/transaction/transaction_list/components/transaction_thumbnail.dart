@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/transaction.dart';
+import 'package:khata/modules/components/widgets/custom_file_image_view.dart';
+import 'package:khata/modules/transaction/transaction_list/components/transaction_thumbnail_controller.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 import 'package:khata/extensions/date_time_extensions.dart';
@@ -20,6 +22,10 @@ class TransactionThumbnail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(
+      TransactionThumbnailController(transaction),
+      tag: transaction.id,
+    );
     final largeStyle = transaction.amount.isNegative
         ? Theme.of(context).textTheme.titleLarge!.copyWith(color: AppColors.red)
         : Theme.of(context)
@@ -52,6 +58,18 @@ class TransactionThumbnail extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (transaction.photoUrl != null)
+                  Card(
+                    margin:
+                        const EdgeInsets.only(bottom: AppSizes.smallPadding),
+                    child: Obx(() {
+                      return CustomFileImageView(
+                        imageData: controller.imageData,
+                        isLoading: controller.isLoading,
+                        height: 250,
+                      );
+                    }),
+                  ),
                 Text(
                   "Rs. ${transaction.amount.abs().round().toString()}",
                   style: largeStyle,

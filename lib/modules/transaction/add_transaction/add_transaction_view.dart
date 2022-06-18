@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
+import 'package:khata/modules/components/widgets/custom_image_picker.dart';
 import 'package:khata/modules/components/widgets/custom_loader.dart';
 import 'package:khata/modules/components/widgets/custom_text_form_field.dart';
 import 'package:khata/modules/transaction/add_transaction/add_transaction_controller.dart';
@@ -33,6 +34,17 @@ class AddTransactionView extends GetView<AddTransactionController> {
                   children: [
                     Column(
                       children: [
+                        GetBuilder<AddTransactionController>(
+                            id: "UPDATE_IMAGE",
+                            builder: (con) {
+                              return CustomImagePicker(
+                                imageData: con.pickedImageData,
+                                isLoading: con.isImageLoading,
+                                onPicked: con.pickImage,
+                                onRemoved: con.removeImage,
+                              );
+                            }),
+                        const SizedBox(height: AppSizes.smallPadding),
                         CustomTextFormField(
                           autofocus: true,
                           controller: controller.amountController,
@@ -80,7 +92,9 @@ class AddTransactionView extends GetView<AddTransactionController> {
                           onPressed: () async {
                             if (controller.formKey.currentState!.validate()) {
                               await controller.addTransaction(
-                                  customer, willAdd);
+                                customer,
+                                willAdd,
+                              );
                             } else {
                               controller.updateValidationMode();
                             }

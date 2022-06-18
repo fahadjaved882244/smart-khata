@@ -21,9 +21,9 @@ class UpdateCustomerController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
     nameController = TextEditingController(text: customer.name);
     phoneController = TextEditingController(text: customer.phoneNumber);
-    super.onInit();
   }
 
   @override

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:khata/themes/app_theme.dart';
 
 Future<bool> showCustomDialog({
   required BuildContext context,
   required String title,
   required String subTitle,
-  String? leftButtonTitle = "Yes",
-  Color? leftButtonColor = AppColors.errorRed,
+  String? leftButtonTitle = "Cancel",
   void Function()? leftButtonAction,
-  String? rightButtonTitle = "No",
-  Color? rightButtonColor = AppColors.blue,
+  String? rightButtonTitle = "Ok",
   void Function()? rightButtonAction,
 }) async {
   final result = await showDialog<bool>(
@@ -23,25 +20,17 @@ Future<bool> showCustomDialog({
           TextButton(
             onPressed: leftButtonAction ??
                 () {
-                  Get.back(result: true);
+                  Get.back(result: false);
                 },
-            child: Text(
-              leftButtonTitle,
-              style: TextStyle(
-                  color: leftButtonColor ?? AppColors.blue, fontSize: 17),
-            ),
+            child: Text(leftButtonTitle),
           ),
         if (rightButtonTitle != null)
           TextButton(
             onPressed: rightButtonAction ??
                 () {
-                  Get.back(result: false);
+                  Get.back(result: true);
                 },
-            child: Text(
-              rightButtonTitle,
-              style: TextStyle(
-                  color: rightButtonColor ?? AppColors.blue, fontSize: 17),
-            ),
+            child: Text(rightButtonTitle),
           ),
       ],
     ),

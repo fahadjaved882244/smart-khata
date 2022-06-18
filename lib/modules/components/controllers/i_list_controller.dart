@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'package:get/get.dart';
+import 'package:khata/modules/components/controllers/i_base_controller.dart';
 
-abstract class IListController<M> extends GetxController {
-  final RxBool _isLoading = false.obs;
-  bool get isLoading => _isLoading.value;
-  set isLoading(bool value) => _isLoading(value);
-
+abstract class IListController<M> extends IBaseController {
   final RxList<M> _list = <M>[].obs;
   List<M> get dataList => _list;
   set dataList(List<M> list) => _list.value = list;

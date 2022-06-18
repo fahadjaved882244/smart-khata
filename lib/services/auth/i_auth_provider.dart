@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/widgets.dart';
 import 'package:khata/data/models/user.dart';
 
 abstract class IAuthProvider {
@@ -10,7 +11,11 @@ abstract class IAuthProvider {
     required Map<String, dynamic> body,
   });
 
-  Future<UserModel?> phoneAuth({required String phone});
+  Future<UserModel?> phoneAuth({
+    required String phone,
+    required VoidCallback showLoading,
+    required VoidCallback closeLoading,
+  });
 
   Future<UserModel?> login({required String email, required String password});
 

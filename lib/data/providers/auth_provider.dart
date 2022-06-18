@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/user.dart';
 import 'package:khata/routes/route_names.dart';
@@ -32,7 +33,12 @@ class AuthProvider implements IAuthProvider {
   }
 
   @override
-  Future<UserModel?> phoneAuth({required String phone}) async {
+  Future<UserModel?> phoneAuth({
+    required String phone,
+    required VoidCallback showLoading,
+    required VoidCallback closeLoading,
+  }) async {
+    showLoading();
     UserModel? user;
     await _firebaseAuth.verifyPhoneNumber(
       phoneNumber: phone,
@@ -72,6 +78,7 @@ class AuthProvider implements IAuthProvider {
         }
       },
       verificationFailed: (FirebaseAuthException e) {
+        closeLoading();
         if (e.code == 'invalid-phone-number') {
           throw InvalidPhoneException(code: e.code);
         }

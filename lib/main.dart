@@ -1,8 +1,8 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:khata/data/providers/auth_provider.dart';
 import 'package:khata/data/providers/user_provider.dart';
 import 'package:khata/modules/auth/auth_controller.dart';
@@ -14,8 +14,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  await GetStorage.init();
   await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+  );
   final auth =
       Get.put(AuthController(AuthProvider(UserProvider())), permanent: true);
   bool userFound = false;

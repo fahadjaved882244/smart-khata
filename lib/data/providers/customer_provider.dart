@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:khata/data/models/customer.dart';
 import 'package:khata/extensions/firebase_extensions.dart';
 import 'package:khata/modules/components/popups/custom_snack_bar.dart';
@@ -22,14 +21,14 @@ class CustomerProvider {
     final rawStream = _firestore.userDoc.customerCollection
         .orderBy("lastActivity", descending: true)
         .snapshots();
-    yield* await compute(parseRawStream, rawStream);
+    yield* parseRawStream(rawStream);
   }
 
   static Future<List<CustomerModel>?> getAll() async {
     try {
       return _firestore.userDoc.customerCollection
           .get()
-          .then((value) => compute(parseRawList, value.docs));
+          .then((value) => parseRawList(value.docs));
     } catch (e) {
       showCustomSnackBar(message: "Get_All_Leads: exception : $e");
     }

@@ -16,11 +16,10 @@ class LightAppTheme {
     cardTheme: _cardTheme,
     floatingActionButtonTheme: _fabTheme,
     listTileTheme: _listTileTheme,
+    dialogTheme: _dialogTheme,
     inputDecorationTheme: _inputDecorationTheme,
+    radioTheme: _radioTheme,
     useMaterial3: true,
-    // backgroundColor: AppColors.background,
-    // dialogBackgroundColor: AppColors.white,
-    // errorColor: AppColors.red,
   );
 
   /////////// Color Theme //////////////
@@ -93,6 +92,22 @@ class LightAppTheme {
     indicatorSize: TabBarIndicatorSize.label,
   );
 
+  /////////// Radio Theme //////////////
+  static final _radioTheme = RadioThemeData(
+    fillColor: MaterialStateProperty.resolveWith<Color>(
+      (states) {
+        if (states.contains(MaterialState.disabled)) return AppColors.darkGray;
+        return _colorScheme.primary;
+      },
+    ),
+    overlayColor: MaterialStateProperty.resolveWith<Color>(
+      (states) {
+        if (states.contains(MaterialState.disabled)) return AppColors.darkGray;
+        return _colorScheme.primary;
+      },
+    ),
+  );
+
   /////////// List Tile Theme //////////////
   static final _listTileTheme = ListTileThemeData(
     contentPadding:
@@ -117,6 +132,18 @@ class LightAppTheme {
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(AppSizes.cardRadius),
     ),
+  );
+
+  static final _dialogTheme = DialogTheme(
+    backgroundColor: _colorScheme.surface,
+    alignment: Alignment.center,
+    titleTextStyle: _textTheme.headlineSmall!.copyWith(
+      color: _colorScheme.onSurface,
+      fontWeight: FontWeight.w500,
+      fontSize: 18,
+    ),
+    contentTextStyle:
+        _textTheme.bodyMedium!.copyWith(color: _colorScheme.onSurfaceVariant),
   );
 
   /////////// Input Decoration Theme //////////////

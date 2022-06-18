@@ -19,12 +19,12 @@ class TransactionListView extends GetView<CustomerDetailController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.dataList.isEmpty) {
+      final dataList = controller.uiList;
+      if (dataList.isEmpty) {
         return const Center(child: Text('No transactions yet!'));
       } else {
         WidgetsBinding.instance.addPostFrameCallback(
             (_) => _scrollToBottom(controller.scrollController));
-        final dataList = controller.dataList;
         return Padding(
           padding: const EdgeInsets.only(),
           child: ListView.separated(
