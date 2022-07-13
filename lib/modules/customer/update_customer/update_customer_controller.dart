@@ -7,8 +7,9 @@ import 'package:khata/extensions/string_extensions.dart';
 import 'package:khata/routes/route_names.dart';
 
 class UpdateCustomerController extends GetxController {
+  final String businessId;
   final CustomerModel customer;
-  UpdateCustomerController(this.customer);
+  UpdateCustomerController(this.businessId, this.customer);
 
   late final TextEditingController nameController;
   late final TextEditingController phoneController;
@@ -44,14 +45,15 @@ class UpdateCustomerController extends GetxController {
       phoneNumber: phoneController.text.nullIfEmpty?.formatPhoneNumber,
     );
     _isLoading(true);
-    final status = await CustomerProvider.update(customer.id, model.toMap());
+    final status =
+        await CustomerProvider.update(businessId, customer.id, model.toMap());
     _isLoading(false);
     if (status) {
       Get.offNamedUntil(
         RouteNames.customerDetailView,
         (route) {
           return route.settings.name!.getRountingData.route ==
-              RouteNames.homeView;
+              RouteNames.customerListView;
         },
         arguments: model,
       );

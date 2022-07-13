@@ -10,8 +10,9 @@ import 'package:khata/modules/components/controllers/i_list_controller.dart';
 import 'package:khata/modules/components/popups/custom_snack_bar.dart';
 
 class CustomerDetailController extends IListController<TransactionModel> {
+  final String businessId;
   final String customerId;
-  CustomerDetailController(this.customerId);
+  CustomerDetailController(this.businessId, this.customerId);
 
   late final ScrollController scrollController;
   final RxList<TransactionModel> _list = <TransactionModel>[].obs;
@@ -33,7 +34,8 @@ class CustomerDetailController extends IListController<TransactionModel> {
   @override
   void subsribeToStream() {
     isLoading = true;
-    dataStream = TransactionProvider.watchAll(customerId).listen((event) {
+    dataStream =
+        TransactionProvider.watchAll(businessId, customerId).listen((event) {
       dataList = event;
       uiList = event;
       uiList.removeWhere((t) => t.clear == true);
@@ -43,7 +45,7 @@ class CustomerDetailController extends IListController<TransactionModel> {
 
   Future<void> deleteCustomer() async {
     isLoading = true;
-    if (await CustomerProvider.delete(customerId)) {
+    if (await CustomerProvider.delete(businessId, customerId)) {
       Get.back(closeOverlays: true);
       showCustomSnackBar(message: "Customer Deleted!", isSuccess: true);
     }
@@ -53,7 +55,8 @@ class CustomerDetailController extends IListController<TransactionModel> {
   Future<void> deleteSelected() async {
     isLoading = true;
     final transList = selectedItems
-        .map((t) => TransactionProvider.delete(customerId, t.id, t.amount))
+        .map((t) =>
+            TransactionProvider.delete(businessId, customerId, t.id, t.amount))
         .toList();
 
     final imageList = selectedItems.map((t) {
@@ -73,7 +76,7 @@ class CustomerDetailController extends IListController<TransactionModel> {
   Future<void> clearSelected() async {
     isLoading = true;
     final transList = selectedItems
-        .map((t) => TransactionProvider.clear(customerId, t))
+        .map((t) => TransactionProvider.clear(businessId, customerId, t))
         .toList();
     final imageList = selectedItems.map((t) {
       if (t.photoUrl != null) {

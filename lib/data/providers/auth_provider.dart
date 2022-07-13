@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/user.dart';
 import 'package:khata/routes/route_names.dart';
@@ -33,58 +32,67 @@ class AuthProvider implements IAuthProvider {
   }
 
   @override
-  Future<UserModel?> phoneAuth({
+  Future<UserModel?> signInWithPhoneCred({
     required String phone,
-    required VoidCallback showLoading,
-    required VoidCallback closeLoading,
+    required PhoneAuthCredential phoneCred,
   }) async {
-    showLoading();
     UserModel? user;
-    await _firebaseAuth.verifyPhoneNumber(
-      phoneNumber: phone,
-      codeSent: (String verificationId, int? resendToken) async {
-        final result = await Get.toNamed(RouteNames.otpVerificationView);
-        final String? smsCode = result as String?;
-
-        // Create a PhoneAuthCredential with the code
-        if (smsCode != null) {
-          final phoneCred = PhoneAuthProvider.credential(
-            verificationId: verificationId,
-            smsCode: smsCode,
-          );
-          final cred = await _firebaseAuth.signInWithCredential(phoneCred);
-          if (cred.user != null) {
-            user = UserModel(
-              id: cred.user!.uid,
-              phoneNumber: phone,
-            );
-            await _firebaseUserProvider.create(user!);
-            Get.offAllNamed(RouteNames.homeView);
-          }
-        } else {
-          throw InvalidOTPCode(code: "otp");
-        }
-      },
-      codeAutoRetrievalTimeout: (String verificationId) {},
-      verificationCompleted: (PhoneAuthCredential phoneCred) async {
-        final cred = await _firebaseAuth.signInWithCredential(phoneCred);
-        if (cred.user != null) {
-          user = UserModel(
-            id: cred.user!.uid,
-            phoneNumber: phone,
-          );
-          await _firebaseUserProvider.create(user!);
-          Get.offAllNamed(RouteNames.homeView);
-        }
-      },
-      verificationFailed: (FirebaseAuthException e) {
-        closeLoading();
-        if (e.code == 'invalid-phone-number') {
-          throw InvalidPhoneException(code: e.code);
-        }
-      },
-    );
+    final cred = await _firebaseAuth.signInWithCredential(phoneCred);
+    if (cred.user != null) {
+      user = UserModel(
+        id: cred.user!.uid,
+        phoneNumber: phone,
+      );
+      await _firebaseUserProvider.create(user);
+      Get.offAllNamed(RouteNames.splashScreenView);
+    } else {
+      throw InvalidOTPCode(code: "otp");
+    }
     return user;
+  }
+
+  @override
+  Future<void> phoneAuth({
+    required String phone,
+    required void Function(String?) onAutoVerify,
+    required Future<void> Function(PhoneAuthCredential) onSuccess,
+    required void Function() onError,
+  }) async {
+    try {
+      await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: phone,
+        codeSent: (String verificationId, int? resendToken) async {
+          final result = await Get.toNamed(RouteNames.otpVerificationView);
+          final String? smsCode = result;
+
+          // Create a PhoneAuthCredential with the code
+          if (smsCode != null) {
+            final phoneCred = PhoneAuthProvider.credential(
+              verificationId: verificationId,
+              smsCode: smsCode,
+            );
+            await onSuccess(phoneCred);
+            onError();
+          }
+        },
+        verificationCompleted: (PhoneAuthCredential phoneCred) async {
+          onAutoVerify(phoneCred.smsCode);
+          await onSuccess(phoneCred);
+          onError();
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          onError();
+          if (e.code == 'invalid-phone-number') {
+            throw InvalidPhoneException(code: e.code);
+          } else {
+            throw e;
+          }
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override

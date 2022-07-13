@@ -48,6 +48,7 @@ class CustomerListWidget extends GetView<CustomerListController> {
                         Get.toNamed(
                           RouteNames.customerDetailView,
                           arguments: customer,
+                          parameters: {'businessId': controller.businessId},
                         );
                       }
                     },

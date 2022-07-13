@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:khata/data/models/user.dart';
 
 abstract class IAuthProvider {
@@ -11,10 +11,16 @@ abstract class IAuthProvider {
     required Map<String, dynamic> body,
   });
 
-  Future<UserModel?> phoneAuth({
+  Future<UserModel?> signInWithPhoneCred({
     required String phone,
-    required VoidCallback showLoading,
-    required VoidCallback closeLoading,
+    required PhoneAuthCredential phoneCred,
+  });
+
+  Future<void> phoneAuth({
+    required String phone,
+    required void Function(String?) onAutoVerify,
+    required Future<void> Function(PhoneAuthCredential) onSuccess,
+    required void Function() onError,
   });
 
   Future<UserModel?> login({required String email, required String password});

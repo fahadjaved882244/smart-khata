@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:khata/data/models/customer.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
 import 'package:khata/modules/components/widgets/custom_image_picker.dart';
 import 'package:khata/modules/components/widgets/custom_loader.dart';
@@ -11,8 +10,9 @@ import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 
 class AddTransactionView extends GetView<AddTransactionController> {
-  final customer = Get.arguments[0] as CustomerModel;
-  final willAdd = Get.arguments[1] as bool;
+  final businessId = Get.parameters['businessId'] as String;
+  final customerId = Get.parameters['customerId'] as String;
+  final willAdd = Get.arguments as bool;
 
   AddTransactionView({Key? key}) : super(key: key);
 
@@ -48,7 +48,7 @@ class AddTransactionView extends GetView<AddTransactionController> {
                         CustomTextFormField(
                           autofocus: true,
                           controller: controller.amountController,
-                          hintText: "Enter Amount*",
+                          hintText: "Amount*",
                           validator: TextValidator.priceValidator,
                           keyboardType: TextInputType.number,
                           prefixIcon: Column(
@@ -92,9 +92,7 @@ class AddTransactionView extends GetView<AddTransactionController> {
                           onPressed: () async {
                             if (controller.formKey.currentState!.validate()) {
                               await controller.addTransaction(
-                                customer,
-                                willAdd,
-                              );
+                                  businessId, customerId, willAdd);
                             } else {
                               controller.updateValidationMode();
                             }

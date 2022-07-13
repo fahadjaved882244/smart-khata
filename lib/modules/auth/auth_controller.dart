@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/user.dart';
 import 'package:khata/routes/route_names.dart';
@@ -18,20 +18,33 @@ class AuthController extends GetxService with AuthService {
     return user;
   }
 
-  Future<UserModel?> phoneAuthentication({
+  Future<UserModel?> signInWithPhoneCred({
     required String phone,
-    required VoidCallback showLoading,
-    required VoidCallback closeLoading,
+    required PhoneAuthCredential phoneCred,
   }) async {
-    final user = await _authProvider
-        .phoneAuth(
+    final newUser = await _authProvider
+        .signInWithPhoneCred(
           phone: phone,
-          showLoading: showLoading,
-          closeLoading: closeLoading,
+          phoneCred: phoneCred,
         )
         .catchError(handleError);
-    _userModel.value = user;
-    return user;
+    _userModel.value = newUser;
+    return newUser;
+  }
+
+  Future<void> phoneAuthentication({
+    required String phone,
+    required void Function(String?) onAutoVerify,
+    required Future<void> Function(PhoneAuthCredential) onSuccess,
+    required void Function() onError,
+  }) async {
+    await _authProvider
+        .phoneAuth(
+            phone: phone,
+            onAutoVerify: onAutoVerify,
+            onSuccess: onSuccess,
+            onError: onError)
+        .catchError(handleError);
   }
 
   Future<bool> updateUser({

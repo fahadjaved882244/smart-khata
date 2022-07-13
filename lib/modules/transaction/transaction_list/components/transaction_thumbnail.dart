@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/transaction.dart';
-import 'package:khata/modules/components/widgets/custom_file_image_view.dart';
+import 'package:khata/modules/components/widgets/custom_mem_image_view.dart';
 import 'package:khata/modules/transaction/transaction_list/components/transaction_thumbnail_controller.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
@@ -63,7 +63,7 @@ class TransactionThumbnail extends StatelessWidget {
                     margin:
                         const EdgeInsets.only(bottom: AppSizes.smallPadding),
                     child: Obx(() {
-                      return CustomFileImageView(
+                      return CustomMemImageView(
                         imageData: controller.imageData,
                         isLoading: controller.isLoading,
                         height: 250,

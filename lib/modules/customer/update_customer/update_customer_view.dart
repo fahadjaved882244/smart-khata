@@ -10,12 +10,13 @@ import 'package:khata/services/basic/text_validator.dart';
 import 'package:khata/themes/app_sizes.dart';
 
 class UpdateCustomerView extends StatelessWidget {
+  final businessId = Get.parameters['businessId'] as String;
   final CustomerModel customer = Get.arguments as CustomerModel;
   UpdateCustomerView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(UpdateCustomerController(customer));
+    final controller = Get.put(UpdateCustomerController(businessId, customer));
 
     return Obx(
       () {

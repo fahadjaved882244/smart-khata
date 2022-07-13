@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:khata/data/providers/auth_provider.dart';
 import 'package:khata/data/providers/user_provider.dart';
 import 'package:khata/modules/auth/auth_controller.dart';
@@ -14,16 +15,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  await GetStorage.init();
   await Firebase.initializeApp();
   await FirebaseAppCheck.instance.activate(
     webRecaptchaSiteKey: 'recaptcha-v3-site-key',
   );
+  Get.put(GetStorage(), permanent: true);
   final auth =
       Get.put(AuthController(AuthProvider(UserProvider())), permanent: true);
   bool userFound = false;
   if (await auth.getUser() != null) {
     userFound = true;
   }
+
   runApp(App(userFound));
 }
 
@@ -42,7 +46,7 @@ class App extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Khata App',
         initialRoute:
-            userFound ? RouteNames.homeView : RouteNames.phoneAuthView,
+            userFound ? RouteNames.splashScreenView : RouteNames.phoneAuthView,
         getPages: AppRoutes.routes,
         defaultTransition: Transition.fade,
         debugShowCheckedModeBanner: false,

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:khata/data/models/customer.dart';
 import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 
 class BottomButtonBar extends StatelessWidget {
-  final CustomerModel customer;
+  final String businessId;
+  final String customerId;
   const BottomButtonBar({
     Key? key,
-    required this.customer,
+    required this.businessId,
+    required this.customerId,
   }) : super(key: key);
 
   @override
@@ -33,7 +34,11 @@ class BottomButtonBar extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(
                     RouteNames.addTransactionView,
-                    arguments: [customer, true],
+                    parameters: {
+                      'businessId': businessId,
+                      'customerId': customerId,
+                    },
+                    arguments: true,
                   );
                 },
                 child: Row(
@@ -63,7 +68,11 @@ class BottomButtonBar extends StatelessWidget {
                 onPressed: () {
                   Get.toNamed(
                     RouteNames.addTransactionView,
-                    arguments: [customer, false],
+                    parameters: {
+                      'businessId': businessId,
+                      'customerId': customerId,
+                    },
+                    arguments: false,
                   );
                 },
                 child: Row(

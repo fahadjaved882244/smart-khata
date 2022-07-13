@@ -13,15 +13,16 @@ import 'package:khata/themes/app_theme.dart';
 
 import 'update_transaction_controller.dart';
 
-class UpdateTransactionView extends GetView<UpdateTransactionController> {
-  final customerId = Get.arguments[0] as String;
-  final transaction = Get.arguments[1] as TransactionModel;
+class UpdateTransactionView extends StatelessWidget {
+  final businessId = Get.parameters['businessId'] as String;
+  final customerId = Get.parameters['customerId'] as String;
+  final transaction = Get.arguments as TransactionModel;
   UpdateTransactionView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller =
-        Get.put(UpdateTransactionController(customerId, transaction));
+    final controller = Get.put(
+        UpdateTransactionController(businessId, customerId, transaction));
 
     final color =
         !transaction.amount.isNegative ? AppColors.green : AppColors.red;
@@ -50,7 +51,7 @@ class UpdateTransactionView extends GetView<UpdateTransactionController> {
                     const SizedBox(height: AppSizes.smallPadding),
                     CustomTextFormField(
                       controller: controller.amountController,
-                      hintText: "Enter Amount*",
+                      hintText: "Amount*",
                       validator: TextValidator.priceValidator,
                       keyboardType: TextInputType.number,
                       suffixIcon: const Icon(Icons.edit_outlined),

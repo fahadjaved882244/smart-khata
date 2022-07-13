@@ -20,20 +20,22 @@ class TransactionProvider {
   static final _firestore = FirebaseFirestore.instance;
 
   static Stream<List<TransactionModel>> watchAll(
+    String businessId,
     String customerId,
   ) async* {
     final rawStream = _firestore
-        .customerDoc(customerId)
+        .customerDoc(businessId, customerId)
         .transactionCollection
         .orderBy("dateTime", descending: false)
         .snapshots();
     yield* await compute(parseRawStream, rawStream);
   }
 
-  static Future<List<TransactionModel>?> getAll(String customerId) async {
+  static Future<List<TransactionModel>?> getAll(
+      String businessId, String customerId) async {
     try {
       return _firestore
-          .customerDoc(customerId)
+          .customerDoc(businessId, customerId)
           .transactionCollection
           .get()
           .then((value) => compute(parseRawList, value.docs));
@@ -44,12 +46,15 @@ class TransactionProvider {
   }
 
   static Future<bool> create(
+    String businessId,
     String customerId,
     TransactionModel model,
   ) async {
     try {
-      await _firestore.transactionDoc(customerId, model.id).set(model.toMap());
-      await _firestore.customerDoc(customerId).update({
+      await _firestore
+          .transactionDoc(businessId, customerId, model.id)
+          .set(model.toMap());
+      await _firestore.customerDoc(businessId, customerId).update({
         'lastActivity': Timestamp.fromDate(model.dateTime),
         'credit': FieldValue.increment(model.amount),
       });
@@ -61,12 +66,14 @@ class TransactionProvider {
   }
 
   static Future<TransactionModel?> read(
+    String businessId,
     String customerId,
     String transId,
   ) async {
     try {
-      final snapShot =
-          await _firestore.transactionDoc(customerId, transId).get();
+      final snapShot = await _firestore
+          .transactionDoc(businessId, customerId, transId)
+          .get();
       if (snapShot.data() != null) {
         return TransactionModel.fromMap(snapShot.data()!);
       }
@@ -77,6 +84,7 @@ class TransactionProvider {
   }
 
   static Future<bool> update(
+    String businessId,
     String customerId,
     String transactionId,
     Map<String, dynamic> map,
@@ -84,8 +92,10 @@ class TransactionProvider {
     double oldAmount,
   ) async {
     try {
-      await _firestore.transactionDoc(customerId, transactionId).update(map);
-      await _firestore.customerDoc(customerId).update({
+      await _firestore
+          .transactionDoc(businessId, customerId, transactionId)
+          .update(map);
+      await _firestore.customerDoc(businessId, customerId).update({
         'credit': FieldValue.increment(newAmount - oldAmount),
       });
       return true;
@@ -96,15 +106,16 @@ class TransactionProvider {
   }
 
   static Future<bool> clear(
+    String businessId,
     String customerId,
     TransactionModel oldModel,
   ) async {
     try {
       await _firestore
-          .transactionDoc(customerId, oldModel.id)
+          .transactionDoc(businessId, customerId, oldModel.id)
           .update({"clear": true});
       final newModel = TransactionModel.fromClearAmount(oldModel.amount);
-      await create(customerId, newModel);
+      await create(businessId, customerId, newModel);
       return true;
     } catch (e) {
       showCustomSnackBar(message: "Clear_Transaction: exception : $e");
@@ -113,13 +124,14 @@ class TransactionProvider {
   }
 
   static Future<bool> delete(
+    String businessId,
     String customerId,
     String transId,
     double oldAmount,
   ) async {
     try {
-      await _firestore.transactionDoc(customerId, transId).delete();
-      await _firestore.customerDoc(customerId).update({
+      await _firestore.transactionDoc(businessId, customerId, transId).delete();
+      await _firestore.customerDoc(businessId, customerId).update({
         'credit': FieldValue.increment(-oldAmount),
       });
       return true;

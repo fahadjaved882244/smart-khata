@@ -15,9 +15,11 @@ import 'package:khata/modules/components/popups/custom_snack_bar.dart';
 import 'package:khata/extensions/date_time_extensions.dart';
 
 class UpdateTransactionController extends IBaseController {
+  final String businessId;
   final String customerId;
   final TransactionModel transaction;
-  UpdateTransactionController(this.customerId, this.transaction);
+  UpdateTransactionController(
+      this.businessId, this.customerId, this.transaction);
 
   late final double oldAmount;
   late DateTime datePicked;
@@ -43,7 +45,12 @@ class UpdateTransactionController extends IBaseController {
         TextEditingController(text: transaction.amount.abs().toString());
     dateController = TextEditingController(text: datePicked.formattedDateRaw);
     noteController = TextEditingController(text: transaction.note);
-    loadImage();
+  }
+
+  @override
+  void onReady() async {
+    super.onReady();
+    await loadImage();
   }
 
   @override
@@ -122,21 +129,22 @@ class UpdateTransactionController extends IBaseController {
 
   Future<void> deleteTransaction() async {
     isLoading = true;
+    if (transaction.photoUrl != null) {
+      await StorageProvider.delete(transaction.photoUrl!);
+    }
     await TransactionProvider.delete(
+      businessId,
       customerId,
       transaction.id,
       transaction.amount,
     );
-    if (transaction.photoUrl != null) {
-      await StorageProvider.delete(transaction.photoUrl!);
-    }
     Get.back();
     isLoading = false;
   }
 
   Future<void> clearTransaction() async {
     isLoading = true;
-    await TransactionProvider.clear(customerId, transaction);
+    await TransactionProvider.clear(businessId, customerId, transaction);
     if (transaction.photoUrl != null) {
       await StorageProvider.delete(transaction.photoUrl!);
     }
@@ -148,7 +156,7 @@ class UpdateTransactionController extends IBaseController {
     if (_pickedImage != null && _pickedImage!.name.isEmpty) {
       return transaction.photoUrl;
     } else if (_pickedImage != null) {
-      return '${user.id}/$customerId/${transaction.id}/${_pickedImage!.name}';
+      return '${user.id}/$businessId/$customerId/${transaction.id}/${_pickedImage!.name}';
     } else {
       return null;
     }
@@ -175,6 +183,7 @@ class UpdateTransactionController extends IBaseController {
         await StorageProvider.upload(imagePath!, io.File(_pickedImage!.path));
       }
       await TransactionProvider.update(
+        businessId,
         customerId,
         transaction.id,
         map,

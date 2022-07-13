@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khata/modules/components/popups/custom_dialog.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
-import 'package:khata/modules/components/widgets/app_logo_text.dart';
 import 'package:khata/modules/customer/customer_list/components/customer_list_widget.dart';
 import 'package:khata/modules/customer/customer_list/components/search_customer_widget.dart';
 import 'package:khata/modules/customer/customer_list/customer_list_controller.dart';
@@ -11,11 +10,13 @@ import 'package:khata/themes/app_sizes.dart';
 
 import 'components/balance_widget.dart';
 
-class CustomerListView extends GetView<CustomerListController> {
-  const CustomerListView({Key? key}) : super(key: key);
+class CustomerListView extends StatelessWidget {
+  final String businessId = Get.parameters['businessId'] as String;
+  CustomerListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(CustomerListController(businessId));
     return WillPopScope(
       onWillPop: () async {
         if (controller.isSelectable) {
@@ -28,7 +29,17 @@ class CustomerListView extends GetView<CustomerListController> {
       child: Obx(() {
         return BaseScaffold(
           noPadding: true,
-          titleWidget: const AppLogoText(),
+          titleWidget: GetBuilder<CustomerListController>(
+              id: 'BUSINESS_MODEL',
+              builder: (con) {
+                if (con.isBusLoading) {
+                  return const CircularProgressIndicator.adaptive();
+                } else if (con.businessModel == null) {
+                  return const Text("Error");
+                }
+                return businessCard(con, context);
+              }),
+          centerTitle: false,
           actions: [
             if (!controller.isSelectable)
               PopupMenuButton(
@@ -57,6 +68,7 @@ class CustomerListView extends GetView<CustomerListController> {
                 onPressed: () {
                   Get.toNamed(
                     RouteNames.updateCustomerView,
+                    parameters: {'businessId': businessId},
                     arguments: controller.selectedItems[0],
                   );
                   controller.isSelectable = false;
@@ -91,7 +103,10 @@ class CustomerListView extends GetView<CustomerListController> {
               ),
           ],
           floatingActionButton: FloatingActionButton.extended(
-            onPressed: () => Get.toNamed(RouteNames.contactListView),
+            onPressed: () => Get.toNamed(
+              RouteNames.contactListView,
+              parameters: {'businessId': businessId},
+            ),
             icon: const Icon(Icons.person_add),
             label: const Text("Add Customer"),
           ),
@@ -138,6 +153,31 @@ class CustomerListView extends GetView<CustomerListController> {
                 ),
         );
       }),
+    );
+  }
+
+  GestureDetector businessCard(
+      CustomerListController con, BuildContext context) {
+    return GestureDetector(
+      onTap: () => Get.toNamed(
+        RouteNames.businessListView,
+        parameters: {'businessId': businessId},
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.business_center),
+          const SizedBox(width: AppSizes.exSmallPadding),
+          Text(
+            con.businessModel!.name,
+            style: Theme.of(context)
+                .textTheme
+                .headline6!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(width: AppSizes.mediumPadding),
+          const Icon(Icons.arrow_drop_down),
+        ],
+      ),
     );
   }
 }

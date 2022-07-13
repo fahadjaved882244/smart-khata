@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:khata/data/models/customer.dart';
 import 'package:khata/data/models/transaction.dart';
 import 'package:khata/data/providers/storage_provider.dart';
 import 'package:khata/data/providers/transaction_provider.dart';
@@ -97,11 +96,12 @@ class AddTransactionController extends IBaseController {
     update(['UPDATE_IMAGE']);
   }
 
-  Future<void> addTransaction(CustomerModel customer, bool willAdd) async {
+  Future<void> addTransaction(
+      String businessId, String customerId, bool willAdd) async {
     FocusManager.instance.primaryFocus?.unfocus();
     final uid = const Uuid().v1();
     final imagePath = _pickedImage != null
-        ? '${user.id}/${customer.id}/$uid/${_pickedImage!.name}'
+        ? '${user.id}/$businessId/$customerId/$uid/${_pickedImage!.name}'
         : null;
     final amount = double.tryParse(amountController.text);
     if (amount != null) {
@@ -118,11 +118,24 @@ class AddTransactionController extends IBaseController {
       bool? uploaded;
       if (imagePath != null) {
         uploaded = await StorageProvider.upload(
-            imagePath, io.File(_pickedImage!.path));
+          imagePath,
+          io.File(_pickedImage!.path),
+        );
       }
-      final result = await TransactionProvider.create(customer.id, model);
-      if (result && uploaded != null && uploaded == false) {
-        await TransactionProvider.delete(customer.id, uid, signedAmount);
+      final result = await TransactionProvider.create(
+        businessId,
+        customerId,
+        model,
+      );
+      if (result && uploaded != null && !uploaded) {
+        await TransactionProvider.delete(
+          businessId,
+          customerId,
+          uid,
+          signedAmount,
+        );
+      } else if (!result && uploaded != null && uploaded) {
+        await StorageProvider.delete(imagePath!);
       }
       isLoading = false;
       Get.back();

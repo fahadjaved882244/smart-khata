@@ -1,6 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/contact.dart';
+
+Future<List<ContactModel>> parseRawList(List<Contact> rawList) async {
+  return rawList
+      .map((c) => ContactModel(
+            name: c.displayName,
+            phone: c.phones.isNotEmpty ? c.phones[0].number : null,
+          ))
+      .toList();
+}
 
 class ContactListController extends GetxController {
   final RxList<ContactModel> _contacts = <ContactModel>[].obs;
@@ -14,9 +24,9 @@ class ContactListController extends GetxController {
   set isLoading(bool value) => _isLoading(value);
 
   @override
-  onInit() {
+  onReady() {
+    super.onReady();
     _fetchContacts();
-    super.onInit();
   }
 
   Future _fetchContacts() async {
@@ -25,12 +35,7 @@ class ContactListController extends GetxController {
       _permissionDenied.value = true;
     } else {
       final conList = await FlutterContacts.getContacts(withProperties: true);
-      _contacts.value = conList.map((c) {
-        return ContactModel(
-          name: c.displayName,
-          phone: c.phones.isNotEmpty ? c.phones[0].number : null,
-        );
-      }).toList();
+      _contacts.value = await compute(parseRawList, conList);
     }
     isLoading = false;
   }

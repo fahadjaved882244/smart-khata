@@ -1,40 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:khata/modules/business/business_list/business_list_controller.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
 import 'package:khata/modules/components/widgets/avatar_image_text.dart';
 import 'package:khata/modules/components/widgets/custom_list_tile.dart';
-import 'package:khata/modules/contact/contact_list/components/contact_list_widget.dart';
-import 'package:khata/modules/contact/contact_list/components/search_contact_widget.dart';
-import 'package:khata/modules/contact/contact_list/contact_list_controller.dart';
 import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_sizes.dart';
 
-class ContactListView extends GetView<ContactListController> {
+import 'components/business_list_widget.dart';
+
+class BusinessListView extends StatelessWidget {
   final String businessId = Get.parameters['businessId'] as String;
-  ContactListView({Key? key}) : super(key: key);
+  BusinessListView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(BusinessListController(businessId));
     return BaseScaffold(
       noPadding: true,
-      title: "Add Customer",
+      title: "Manage Businesses",
       child: Obx(() {
         if (controller.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (controller.permissionDenied) {
-          return const Center(child: Text('Permission Denied'));
-        } else if (controller.contacts.isEmpty) {
-          return const Center(child: Text('No Contacts Found!'));
+          return const Center(child: CircularProgressIndicator.adaptive());
+        } else if (controller.dataList.isEmpty) {
+          return const Center(child: Text('No Businesses Found!'));
         } else {
           return Column(
             children: [
-              SearchContactWidget(businessId: businessId),
-              const SizedBox(height: 6),
-              _addContactButton(context),
+              _addBusinessButton(context),
               const Divider(),
               Expanded(
-                  child: ContactListWidget(
-                contacts: controller.contacts,
+                  child: BusinessListWidget(
+                businesses: controller.dataList,
                 businessId: businessId,
               )),
             ],
@@ -44,17 +41,17 @@ class ContactListView extends GetView<ContactListController> {
     );
   }
 
-  Padding _addContactButton(BuildContext context) {
+  Padding _addBusinessButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.smallPadding),
       child: CustomListTile(
-        title: "Add Contact",
-        subtitle: "Tap to add a new contact",
-        onTap: () => Get.toNamed(RouteNames.addCustomerView),
+        title: "Add Business",
+        subtitle: "Tap to add a new business",
+        onTap: () => Get.toNamed(RouteNames.addBusinessView),
         leading: AvatarImageText(
           name: "New",
           icon: Icon(
-            Icons.person_add,
+            Icons.business_center,
             color: Theme.of(context).colorScheme.tertiary,
           ),
         ),

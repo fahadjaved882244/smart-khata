@@ -17,27 +17,31 @@ Stream<List<CustomerModel>> parseRawStream(
 class CustomerProvider {
   static final _firestore = FirebaseFirestore.instance;
 
-  static Stream<List<CustomerModel>> watchAll() async* {
-    final rawStream = _firestore.userDoc.customerCollection
+  static Stream<List<CustomerModel>> watchAll(String businessId) async* {
+    final rawStream = _firestore
+        .businessDoc(businessId)
+        .customerCollection
         .orderBy("lastActivity", descending: true)
         .snapshots();
     yield* parseRawStream(rawStream);
   }
 
-  static Future<List<CustomerModel>?> getAll() async {
+  static Future<List<CustomerModel>?> getAll(String businessId) async {
     try {
-      return _firestore.userDoc.customerCollection
+      return _firestore
+          .businessDoc(businessId)
+          .customerCollection
           .get()
           .then((value) => parseRawList(value.docs));
     } catch (e) {
-      showCustomSnackBar(message: "Get_All_Leads: exception : $e");
+      showCustomSnackBar(message: "Get_All_Customers: exception : $e");
     }
     return null;
   }
 
-  static Future<bool> create(CustomerModel model) async {
+  static Future<bool> create(String businessId, CustomerModel model) async {
     try {
-      await _firestore.customerDoc(model.id).set(model.toMap());
+      await _firestore.customerDoc(businessId, model.id).set(model.toMap());
       return true;
     } catch (e) {
       showCustomSnackBar(message: "Create_Customer: exception : $e");
@@ -45,9 +49,11 @@ class CustomerProvider {
     return false;
   }
 
-  static Future<CustomerModel?> read(String id) async {
+  static Future<CustomerModel?> read(
+      String businessId, String customerId) async {
     try {
-      final snapShot = await _firestore.customerDoc(id).get();
+      final snapShot =
+          await _firestore.customerDoc(businessId, customerId).get();
       if (snapShot.data() != null) {
         return CustomerModel.fromMap(snapShot.data()!);
       }
@@ -57,9 +63,10 @@ class CustomerProvider {
     return null;
   }
 
-  static Future<bool> update(String id, Map<String, Object?> data) async {
+  static Future<bool> update(
+      String businessId, String customerId, Map<String, Object?> data) async {
     try {
-      await _firestore.customerDoc(id).update(data);
+      await _firestore.customerDoc(businessId, customerId).update(data);
       return true;
     } catch (e) {
       showCustomSnackBar(message: "Update_Customer: exception : $e");
@@ -67,9 +74,9 @@ class CustomerProvider {
     }
   }
 
-  static Future<bool> delete(String id) async {
+  static Future<bool> delete(String businessId, String customerId) async {
     try {
-      await _firestore.customerDoc(id).delete();
+      await _firestore.customerDoc(businessId, customerId).delete();
       return true;
     } catch (e) {
       showCustomSnackBar(message: "Delete_Customer: exception : $e");

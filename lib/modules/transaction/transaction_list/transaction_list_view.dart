@@ -64,7 +64,11 @@ class TransactionListView extends GetView<CustomerDetailController> {
                         } else {
                           Get.toNamed(
                             RouteNames.updateTransactionView,
-                            arguments: [controller.customerId, transaction],
+                            parameters: {
+                              'businessId': controller.businessId,
+                              'customerId': controller.customerId,
+                            },
+                            arguments: transaction,
                           );
                         }
                       },

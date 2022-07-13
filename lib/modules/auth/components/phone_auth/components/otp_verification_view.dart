@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:khata/modules/auth/components/otp_verification/otp_verification_controller.dart';
 import 'package:khata/modules/auth/components/phone_auth/phone_auth_controller.dart';
 import 'package:khata/modules/components/buttons/custom_filled_button.dart';
+import 'package:khata/modules/components/popups/custom_snack_bar.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
 import 'package:khata/modules/components/widgets/app_logo_text.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 
-class OtpVerificationView extends GetView<OtpVerificationController> {
+class OtpVerificationView extends GetView<PhoneAuthController> {
   const OtpVerificationView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final phoneAuthC = Get.find<PhoneAuthController>();
     return BaseScaffold(
       titleWidget: const AppLogoText(),
       child: ListView(
@@ -37,7 +36,7 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
                     ),
               ),
               Text(
-                "+92${phoneAuthC.phoneController.text}.",
+                "+92${controller.phoneController.text}.",
                 style: Theme.of(context).textTheme.labelLarge!.copyWith(
                       fontWeight: FontWeight.w800,
                       color: Theme.of(context).colorScheme.onSurface,
@@ -46,37 +45,22 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
             ],
           ),
           const SizedBox(height: AppSizes.mediumPadding),
-          GetBuilder<OtpVerificationController>(
-              id: 'UPDATE_FORM',
-              builder: (_) {
-                return Form(
-                  key: controller.formKey,
-                  autovalidateMode: controller.autoValidate,
-                  child: OTPTextField(
-                    controller: controller.otpController,
-                    length: 6,
-                    width: MediaQuery.of(context).size.width,
-                    textFieldAlignment: MainAxisAlignment.spaceAround,
-                    fieldWidth: 55,
-                    fieldStyle: FieldStyle.box,
-                    outlineBorderRadius: 15,
-                    style: const TextStyle(fontSize: 17),
-                    onChanged: (pin) {
-                      controller.code.value = pin;
-                    },
-                    onCompleted: (pin) {
-                      controller.code.value = pin;
-                    },
-                  ),
-                );
-              }),
+          OTPTextField(
+            length: 6,
+            width: MediaQuery.of(context).size.width,
+            textFieldAlignment: MainAxisAlignment.spaceAround,
+            fieldWidth: 55,
+            fieldStyle: FieldStyle.box,
+            outlineBorderRadius: 15,
+            style: const TextStyle(fontSize: 17),
+            onCompleted: (pin) => onVerify(pin),
+          ),
           const SizedBox(
-              height: AppSizes.mediumPadding + AppSizes.smallPadding),
+            height: AppSizes.mediumPadding + AppSizes.smallPadding,
+          ),
           CustomFilledButton(
             text: "Verifiy",
-            onPressed: () {
-              Get.back<String?>(result: controller.code.value);
-            },
+            onPressed: () => onVerify(""),
           ),
           const SizedBox(height: AppSizes.largePadding),
           Text(
@@ -90,5 +74,16 @@ class OtpVerificationView extends GetView<OtpVerificationController> {
         ],
       ),
     );
+  }
+
+  void onVerify(String code) {
+    if (code.length == 6) {
+      Get.back<String?>(result: code);
+    } else {
+      showCustomSnackBar(
+        message: "Enter complete OTP code!",
+        isError: true,
+      );
+    }
   }
 }

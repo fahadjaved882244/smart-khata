@@ -9,7 +9,9 @@ import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_sizes.dart';
 
 class SearchContactWidget extends GetView<ContactListController> {
-  const SearchContactWidget({Key? key}) : super(key: key);
+  final String businessId;
+  const SearchContactWidget({Key? key, required this.businessId})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class SearchContactWidget extends GetView<ContactListController> {
           onTap: () {
             showSearch(
               context: context,
-              delegate: _SearchDelegate(controller.contacts),
+              delegate: _SearchDelegate(controller.contacts, businessId),
             );
           },
           child: CustomTextFormField(
@@ -39,7 +41,8 @@ class SearchContactWidget extends GetView<ContactListController> {
 
 class _SearchDelegate extends SearchDelegate {
   final List<ContactModel> contacts;
-  _SearchDelegate(this.contacts);
+  final String businessId;
+  _SearchDelegate(this.contacts, this.businessId);
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -77,7 +80,10 @@ class _SearchDelegate extends SearchDelegate {
     }).toList();
 
     if (result.isNotEmpty) {
-      return ContactListWidget(contacts: result);
+      return ContactListWidget(
+        contacts: result,
+        businessId: businessId,
+      );
     } else {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.smallPadding),

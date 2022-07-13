@@ -14,12 +14,14 @@ import 'package:url_launcher/url_launcher.dart';
 import 'components/bottom_button_bar.dart';
 
 class CustomerDetailView extends StatelessWidget {
+  final businessId = Get.parameters['businessId'] as String;
   final customer = Get.arguments as CustomerModel;
   CustomerDetailView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CustomerDetailController(customer.id));
+    final controller =
+        Get.put(CustomerDetailController(businessId, customer.id));
 
     return WillPopScope(
       onWillPop: () async {
@@ -58,6 +60,7 @@ class CustomerDetailView extends StatelessWidget {
                     if (i == 0) {
                       Get.toNamed(
                         RouteNames.updateCustomerView,
+                        parameters: {'businessId': businessId},
                         arguments: customer,
                       );
                     } else if (i == 1) {
@@ -80,7 +83,11 @@ class CustomerDetailView extends StatelessWidget {
                   onPressed: () {
                     Get.toNamed(
                       RouteNames.updateTransactionView,
-                      arguments: [customer.id, controller.selectedItems[0]],
+                      parameters: {
+                        'businessId': businessId,
+                        'customerId': customer.id,
+                      },
+                      arguments: controller.selectedItems[0],
                     );
                     controller.isSelectable = false;
                     controller.selectedItems.clear();
@@ -117,7 +124,10 @@ class CustomerDetailView extends StatelessWidget {
                   icon: const Icon(Icons.close),
                 ),
             ],
-            bottomNavigationBar: BottomButtonBar(customer: customer),
+            bottomNavigationBar: BottomButtonBar(
+              businessId: businessId,
+              customerId: customer.id,
+            ),
             child: Column(
               children: [
                 TopCustomerCard(
