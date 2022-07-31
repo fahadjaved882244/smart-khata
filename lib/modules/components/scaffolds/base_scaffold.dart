@@ -12,6 +12,8 @@ class BaseScaffold extends StatelessWidget {
   final bool noPadding;
   final Widget? floatingActionButton;
   final bool? centerTitle;
+  final bool automaticallyImplyLeading;
+  final Color? backgroundColor;
   const BaseScaffold({
     Key? key,
     required this.child,
@@ -24,6 +26,8 @@ class BaseScaffold extends StatelessWidget {
     this.resizeToAvoidBottomInset = true,
     this.noPadding = false,
     this.centerTitle,
+    this.backgroundColor,
+    this.automaticallyImplyLeading = true,
   }) : super(key: key);
 
   @override
@@ -35,7 +39,9 @@ class BaseScaffold extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
+        automaticallyImplyLeading: automaticallyImplyLeading,
         centerTitle: centerTitle,
         title: titleWidget ??
             Text(

@@ -12,20 +12,21 @@ class TransactionThumbnail extends StatelessWidget {
   final bool isSelected;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
-  const TransactionThumbnail({
+  final TransactionThumbnailController controller;
+  TransactionThumbnail({
     Key? key,
     required this.transaction,
     required this.isSelected,
     required this.onTap,
     required this.onLongPress,
-  }) : super(key: key);
+  })  : controller = Get.put(
+          TransactionThumbnailController(transaction),
+          tag: transaction.id,
+        ),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(
-      TransactionThumbnailController(transaction),
-      tag: transaction.id,
-    );
     final largeStyle = transaction.amount.isNegative
         ? Theme.of(context).textTheme.titleLarge!.copyWith(color: AppColors.red)
         : Theme.of(context)

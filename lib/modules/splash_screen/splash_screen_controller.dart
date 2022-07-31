@@ -11,8 +11,7 @@ class SplashScreenController extends GetxController {
   }
 
   Future<void> navigateForward() async {
-    final box = Get.find<GetStorage>();
-    box.remove('businessId');
+    final box = GetStorage();
     final String? bid = box.read('businessId');
     if (bid != null) {
       Get.offAllNamed(

@@ -62,7 +62,7 @@ class AuthController extends GetxService with AuthService {
 
   Future<void> logout() async {
     await _authProvider.signOut();
-    _userModel.value = null;
     Get.offAllNamed(RouteNames.phoneAuthView);
+    _userModel.value = null;
   }
 }

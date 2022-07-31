@@ -2,11 +2,13 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:khata/data/providers/auth_provider.dart';
 import 'package:khata/data/providers/user_provider.dart';
 import 'package:khata/modules/auth/auth_controller.dart';
+import 'package:khata/modules/components/popups/custom_screen_lock.dart';
 import 'package:khata/routes/app_routes.dart';
 import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_theme.dart';
@@ -17,10 +19,7 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   await GetStorage.init();
   await Firebase.initializeApp();
-  await FirebaseAppCheck.instance.activate(
-    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
-  );
-  Get.put(GetStorage(), permanent: true);
+  await FirebaseAppCheck.instance.activate();
   final auth =
       Get.put(AuthController(AuthProvider(UserProvider())), permanent: true);
   bool userFound = false;
@@ -28,7 +27,11 @@ void main() async {
     userFound = true;
   }
 
-  runApp(App(userFound));
+  runApp(AppLock(
+    builder: (args) => App(userFound),
+    lockScreen: const CustomScreenLock(),
+    enabled: userFound,
+  ));
 }
 
 class App extends StatelessWidget {

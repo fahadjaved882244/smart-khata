@@ -95,7 +95,7 @@ class AddBusinessController extends IBaseController {
     final model = BusinessModel(
       id: uid,
       dateTime: DateTime.now(),
-      name: nameController.text,
+      name: nameController.text.trim().capFirst,
       type: typeController.text.nullIfEmpty,
       photoUrl: imagePath,
     );
@@ -109,7 +109,7 @@ class AddBusinessController extends IBaseController {
       );
     }
     final status = await BusinessProvider.create(model);
-    await Get.find<GetStorage>().write('businessId', uid);
+    await GetStorage().write('businessId', uid);
     if (status && uploaded != null && !uploaded) {
       await BusinessProvider.update(uid, {'photoUrl': null});
       showCustomSnackBar(

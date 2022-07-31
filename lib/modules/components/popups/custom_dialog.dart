@@ -12,6 +12,7 @@ Future<bool> showCustomDialog({
 }) async {
   final result = await showDialog<bool>(
     context: context,
+    useRootNavigator: false,
     builder: (context) => AlertDialog(
       title: Text(title),
       content: Text(subTitle),
@@ -20,7 +21,7 @@ Future<bool> showCustomDialog({
           TextButton(
             onPressed: leftButtonAction ??
                 () {
-                  Get.back(result: false);
+                  Get.back(result: false, closeOverlays: true);
                 },
             child: Text(leftButtonTitle),
           ),
@@ -28,7 +29,7 @@ Future<bool> showCustomDialog({
           TextButton(
             onPressed: rightButtonAction ??
                 () {
-                  Get.back(result: true);
+                  Get.back(result: true, closeOverlays: true);
                 },
             child: Text(rightButtonTitle),
           ),

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:khata/themes/app_sizes.dart';
 
 import 'custom_mem_image_view.dart';
@@ -61,7 +62,12 @@ class CustomImagePicker extends StatelessWidget {
                   elevation: 5,
                   color: Theme.of(context).colorScheme.background,
                   child: IconButton(
-                    onPressed: () async => await onPicked(context),
+                    onPressed: () async {
+                      final ctx = context;
+                      await onPicked(context);
+                      // ignore: use_build_context_synchronously
+                      AppLock.of(ctx)?.didUnlock();
+                    },
                     icon: Icon(
                       Icons.photo_camera_back_outlined,
                       color: Theme.of(context).colorScheme.onBackground,

@@ -65,6 +65,7 @@ class AddCustomerController extends IBaseController {
           }
           return false;
         },
+        parameters: {'businessId': businessId},
         arguments: model,
       );
     }

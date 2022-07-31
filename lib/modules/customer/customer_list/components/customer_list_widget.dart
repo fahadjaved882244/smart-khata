@@ -9,7 +9,11 @@ import 'package:khata/extensions/date_time_extensions.dart';
 import 'package:khata/themes/app_theme.dart';
 
 class CustomerListWidget extends GetView<CustomerListController> {
-  const CustomerListWidget({Key? key}) : super(key: key);
+  final String businessId;
+  const CustomerListWidget(this.businessId, {Key? key}) : super(key: key);
+
+  @override
+  String? get tag => businessId;
 
   @override
   Widget build(BuildContext context) {

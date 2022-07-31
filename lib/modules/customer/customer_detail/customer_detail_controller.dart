@@ -39,6 +39,7 @@ class CustomerDetailController extends IListController<TransactionModel> {
       dataList = event;
       uiList = event;
       uiList.removeWhere((t) => t.clear == true);
+      uiList = uiList.reversed.toList();
       isLoading = false;
     });
   }

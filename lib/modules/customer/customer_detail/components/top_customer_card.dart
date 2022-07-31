@@ -21,7 +21,7 @@ class TopCustomerCard extends StatelessWidget {
       shape: UnderlineInputBorder(
           borderRadius: BorderRadius.zero,
           borderSide: BorderSide(
-            width: 2,
+            width: 1,
             color: Theme.of(context).colorScheme.outline,
           )),
       child: SizedBox(

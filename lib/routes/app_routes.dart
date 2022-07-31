@@ -4,6 +4,7 @@ import 'package:khata/modules/auth/components/phone_auth/phone_auth_binding.dart
 import 'package:khata/modules/auth/components/phone_auth/phone_auth_view.dart';
 import 'package:khata/modules/business/add_business/add_business_binding.dart';
 import 'package:khata/modules/business/add_business/add_business_view.dart';
+import 'package:khata/modules/business/business_list/business_list_view.dart';
 import 'package:khata/modules/business/update_business/update_business_view.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_binding.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_view.dart';
@@ -42,6 +43,10 @@ class AppRoutes {
       name: RouteNames.addBusinessView,
       page: () => const AddBusinessView(),
       binding: AddBusinessBinding(),
+    ),
+    GetPage(
+      name: RouteNames.businessListView,
+      page: () => BusinessListView(),
     ),
     GetPage(
       name: RouteNames.updateBusinessView,

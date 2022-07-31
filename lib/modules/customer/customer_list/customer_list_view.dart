@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:khata/data/models/business.dart';
 import 'package:khata/modules/components/popups/custom_dialog.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
 import 'package:khata/modules/customer/customer_list/components/customer_list_widget.dart';
@@ -16,7 +17,8 @@ class CustomerListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(CustomerListController(businessId));
+    final controller =
+        Get.put(CustomerListController(businessId), tag: businessId);
     return WillPopScope(
       onWillPop: () async {
         if (controller.isSelectable) {
@@ -31,13 +33,14 @@ class CustomerListView extends StatelessWidget {
           noPadding: true,
           titleWidget: GetBuilder<CustomerListController>(
               id: 'BUSINESS_MODEL',
+              tag: businessId,
               builder: (con) {
                 if (con.isBusLoading) {
                   return const CircularProgressIndicator.adaptive();
                 } else if (con.businessModel == null) {
                   return const Text("Error");
                 }
-                return businessCard(con, context);
+                return businessCard(con.businessModel!, context);
               }),
           centerTitle: false,
           actions: [
@@ -114,7 +117,7 @@ class CustomerListView extends StatelessWidget {
               ? const Center(child: CircularProgressIndicator())
               : Column(
                   children: [
-                    const BalanceWidget(),
+                    BalanceWidget(businessId),
                     if (controller.dataList.isEmpty)
                       Expanded(
                           child: Column(
@@ -141,11 +144,11 @@ class CustomerListView extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppSizes.smallPadding),
-                          child: Column(children: const [
-                            SizedBox(height: AppSizes.smallPadding),
-                            SearchCustomerWidget(),
-                            SizedBox(height: AppSizes.exSmallPadding),
-                            Expanded(child: CustomerListWidget())
+                          child: Column(children: [
+                            const SizedBox(height: AppSizes.smallPadding),
+                            SearchCustomerWidget(businessId),
+                            const SizedBox(height: AppSizes.exSmallPadding),
+                            Expanded(child: CustomerListWidget(businessId))
                           ]),
                         ),
                       ),
@@ -156,27 +159,35 @@ class CustomerListView extends StatelessWidget {
     );
   }
 
-  GestureDetector businessCard(
-      CustomerListController con, BuildContext context) {
-    return GestureDetector(
+  Widget businessCard(BusinessModel business, BuildContext context) {
+    final color = Theme.of(context).colorScheme.tertiary;
+    return InkWell(
       onTap: () => Get.toNamed(
         RouteNames.businessListView,
         parameters: {'businessId': businessId},
       ),
-      child: Row(
-        children: [
-          const Icon(Icons.business_center),
-          const SizedBox(width: AppSizes.exSmallPadding),
-          Text(
-            con.businessModel!.name,
-            style: Theme.of(context)
-                .textTheme
-                .headline6!
-                .copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: AppSizes.mediumPadding),
-          const Icon(Icons.arrow_drop_down),
-        ],
+      child: SizedBox(
+        width: 250,
+        child: Row(
+          children: [
+            Icon(Icons.business_center, color: color),
+            const SizedBox(width: AppSizes.smallPadding),
+            Flexible(
+              fit: FlexFit.loose,
+              child: Text(
+                business.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6!
+                    .copyWith(fontWeight: FontWeight.bold, color: color),
+              ),
+            ),
+            const SizedBox(width: AppSizes.smallPadding),
+            Icon(Icons.arrow_drop_down, color: color, size: 29),
+          ],
+        ),
       ),
     );
   }

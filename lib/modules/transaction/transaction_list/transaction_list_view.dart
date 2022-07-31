@@ -10,12 +10,6 @@ import 'package:khata/extensions/date_time_extensions.dart';
 class TransactionListView extends GetView<CustomerDetailController> {
   const TransactionListView({Key? key}) : super(key: key);
 
-  void _scrollToBottom(ScrollController controller) {
-    if (controller.hasClients) {
-      controller.jumpTo(controller.position.maxScrollExtent);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -23,11 +17,10 @@ class TransactionListView extends GetView<CustomerDetailController> {
       if (dataList.isEmpty) {
         return const Center(child: Text('No transactions yet!'));
       } else {
-        WidgetsBinding.instance.addPostFrameCallback(
-            (_) => _scrollToBottom(controller.scrollController));
         return Padding(
           padding: const EdgeInsets.only(),
           child: ListView.separated(
+            reverse: true,
             padding:
                 const EdgeInsets.all(AppSizes.smallPadding).copyWith(top: 0),
             controller: controller.scrollController,
@@ -35,9 +28,9 @@ class TransactionListView extends GetView<CustomerDetailController> {
             itemBuilder: (_, i) {
               final transaction = dataList[i];
               bool showDate = false;
-              if (i == 0 ||
+              if (i == controller.dataList.length - 1 ||
                   transaction.dateTime.formattedDate !=
-                      dataList[i - 1].dateTime.formattedDate) {
+                      dataList[i + 1].dateTime.formattedDate) {
                 showDate = true;
               }
               return Column(

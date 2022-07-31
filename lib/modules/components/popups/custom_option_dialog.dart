@@ -13,6 +13,7 @@ Future<int> showCustomOptionDialog({
 }) async {
   final result = await showDialog<int>(
     context: context,
+    useRootNavigator: false,
     builder: (context) => _RadioGroup(
       title: title,
       optionList: options,

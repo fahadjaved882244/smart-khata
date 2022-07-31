@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/business.dart';
 import 'package:khata/modules/components/buttons/custom_filled_button.dart';
-import 'package:khata/modules/components/popups/custom_dialog.dart';
 import 'package:khata/modules/components/scaffolds/base_scaffold.dart';
 import 'package:khata/modules/components/widgets/custom_image_picker.dart';
 import 'package:khata/modules/components/widgets/custom_loader.dart';
@@ -62,7 +61,7 @@ class UpdateBusinessView extends StatelessWidget {
                     // ),
                     const SizedBox(height: AppSizes.mediumPadding),
                     CustomFilledButton(
-                      text: "Update Transaction",
+                      text: "Update",
                       onPressed: () async {
                         if (controller.formKey.currentState!.validate()) {
                           controller.updateBusiness();
@@ -71,22 +70,22 @@ class UpdateBusinessView extends StatelessWidget {
                         }
                       },
                     ),
-                    const Divider(height: AppSizes.largePadding),
-                    CustomFilledButton(
-                      isDanger: true,
-                      text: "Delete Business",
-                      onPressed: () async {
-                        if (await showCustomDialog(
-                          context: context,
-                          title: "Delete Business?",
-                          subTitle:
-                              "Business will be permanently removed form your account. Sure, you want to delete this business?",
-                          rightButtonTitle: "Delete",
-                        )) {
-                          await controller.deleteBusiness();
-                        }
-                      },
-                    ),
+                    // const Divider(height: AppSizes.largePadding),
+                    // CustomFilledButton(
+                    //   isDanger: true,
+                    //   text: "Delete Business",
+                    //   onPressed: () async {
+                    //     if (await showCustomDialog(
+                    //       context: context,
+                    //       title: "Delete Business?",
+                    //       subTitle:
+                    //           "Business will be permanently removed form your account. Sure, you want to delete this business?",
+                    //       rightButtonTitle: "Delete",
+                    //     )) {
+                    //       await controller.deleteBusiness();
+                    //     }
+                    //   },
+                    // ),
                   ],
                 ),
               );

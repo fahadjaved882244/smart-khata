@@ -82,7 +82,7 @@ class AuthProvider implements IAuthProvider {
         },
         verificationFailed: (FirebaseAuthException e) {
           onError();
-          if (e.code == 'invalid-phone-number') {
+          if (e.code.contains('invalid-phone-number')) {
             throw InvalidPhoneException(code: e.code);
           } else {
             throw e;

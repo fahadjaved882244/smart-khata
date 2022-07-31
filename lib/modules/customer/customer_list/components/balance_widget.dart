@@ -6,7 +6,11 @@ import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 
 class BalanceWidget extends GetView<CustomerListController> {
-  const BalanceWidget({Key? key}) : super(key: key);
+  final String businessId;
+  const BalanceWidget(this.businessId, {Key? key}) : super(key: key);
+
+  @override
+  String? get tag => businessId;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,7 @@ class BalanceWidget extends GetView<CustomerListController> {
         shape: UnderlineInputBorder(
             borderRadius: BorderRadius.zero,
             borderSide: BorderSide(
-              width: 2,
+              width: 1,
               color: Theme.of(context).colorScheme.outline,
             )),
         child: SizedBox(

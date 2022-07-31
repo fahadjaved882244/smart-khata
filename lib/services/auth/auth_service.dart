@@ -26,6 +26,8 @@ class AuthService {
       showCustomSnackBar(message: error.message, isError: true);
     } else if (error is InvalidOTPCode) {
       showCustomSnackBar(message: error.message, isError: true);
+    } else if (error is Exception) {
+      showCustomSnackBar(message: error.toString(), isError: true);
     }
     return null;
   }
