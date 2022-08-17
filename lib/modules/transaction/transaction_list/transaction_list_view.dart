@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:khata/modules/components/widgets/custom_date_chip.dart';
 import 'package:khata/modules/customer/customer_detail/customer_detail_controller.dart';
 import 'package:khata/modules/transaction/transaction_list/components/transaction_thumbnail.dart';
-import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/extensions/date_time_extensions.dart';
 
@@ -54,15 +53,6 @@ class TransactionListView extends GetView<CustomerDetailController> {
                       onTap: () {
                         if (controller.isSelectable) {
                           controller.selectItem(transaction);
-                        } else {
-                          Get.toNamed(
-                            RouteNames.updateTransactionView,
-                            parameters: {
-                              'businessId': controller.businessId,
-                              'customerId': controller.customerId,
-                            },
-                            arguments: transaction,
-                          );
                         }
                       },
                       onLongPress: () {

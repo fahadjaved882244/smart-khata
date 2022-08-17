@@ -2,24 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:khata/data/models/transaction.dart';
 import 'package:khata/modules/components/widgets/custom_mem_image_view.dart';
+import 'package:khata/modules/customer/customer_detail/customer_detail_controller.dart';
 import 'package:khata/modules/transaction/transaction_list/components/transaction_thumbnail_controller.dart';
+import 'package:khata/routes/route_names.dart';
 import 'package:khata/themes/app_sizes.dart';
 import 'package:khata/themes/app_theme.dart';
 import 'package:khata/extensions/date_time_extensions.dart';
 
-class TransactionThumbnail extends StatelessWidget {
+class TransactionThumbnail extends GetView<CustomerDetailController> {
   final TransactionModel transaction;
   final bool isSelected;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
-  final TransactionThumbnailController controller;
+  final TransactionThumbnailController tbController;
   TransactionThumbnail({
     Key? key,
     required this.transaction,
     required this.isSelected,
     required this.onTap,
     required this.onLongPress,
-  })  : controller = Get.put(
+  })  : tbController = Get.put(
           TransactionThumbnailController(transaction),
           tag: transaction.id,
         ),
@@ -64,10 +66,20 @@ class TransactionThumbnail extends StatelessWidget {
                     margin:
                         const EdgeInsets.only(bottom: AppSizes.smallPadding),
                     child: Obx(() {
-                      return CustomMemImageView(
-                        imageData: controller.imageData,
-                        isLoading: controller.isLoading,
-                        height: 250,
+                      return InkWell(
+                        onTap: !controller.isSelectable
+                            ? () => Get.toNamed(
+                                  RouteNames.fullImageView,
+                                  parameters: transaction.photoUrl != null
+                                      ? {'photoUrl': transaction.photoUrl!}
+                                      : null,
+                                )
+                            : null,
+                        child: CustomMemImageView(
+                          imageData: tbController.imageData,
+                          isLoading: tbController.isLoading,
+                          height: 250,
+                        ),
                       );
                     }),
                   ),

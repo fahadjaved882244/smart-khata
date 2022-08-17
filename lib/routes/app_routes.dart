@@ -6,6 +6,7 @@ import 'package:khata/modules/business/add_business/add_business_binding.dart';
 import 'package:khata/modules/business/add_business/add_business_view.dart';
 import 'package:khata/modules/business/business_list/business_list_view.dart';
 import 'package:khata/modules/business/update_business/update_business_view.dart';
+import 'package:khata/modules/components/widgets/full_image/full_image_view.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_binding.dart';
 import 'package:khata/modules/contact/contact_list/contact_list_view.dart';
 import 'package:khata/modules/customer/add_customer/add_customer_view.dart';
@@ -25,6 +26,10 @@ class AppRoutes {
       name: RouteNames.splashScreenView,
       page: () => const SplashScreenView(),
       binding: SplashScreenBinding(),
+    ),
+    GetPage(
+      name: RouteNames.fullImageView,
+      page: () => FullImageView(),
     ),
 
     //////

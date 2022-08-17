@@ -12,6 +12,7 @@ class CustomMemImageView extends StatelessWidget {
   final bool isDarkBg;
   final bool isVideo;
   final bool isLoading;
+  final Color? backgroundColor;
 
   const CustomMemImageView({
     Key? key,
@@ -22,6 +23,7 @@ class CustomMemImageView extends StatelessWidget {
     this.isDarkBg = false,
     this.isVideo = false,
     this.isLoading = false,
+    this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,8 @@ class CustomMemImageView extends StatelessWidget {
       width: width,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondaryContainer,
+          color: backgroundColor ??
+              Theme.of(context).colorScheme.secondaryContainer,
         ),
         child: !isLoading
             ? Stack(

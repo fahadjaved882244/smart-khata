@@ -9,7 +9,7 @@ import 'custom_mem_image_view.dart';
 class CustomImagePicker extends StatelessWidget {
   final Uint8List? imageData;
   final bool isLoading;
-  final Future<void> Function(BuildContext) onPicked;
+  final Future<int> Function(BuildContext) onPicked;
   final VoidCallback onRemoved;
   final double height;
   final double width;
@@ -64,9 +64,9 @@ class CustomImagePicker extends StatelessWidget {
                   child: IconButton(
                     onPressed: () async {
                       final ctx = context;
-                      await onPicked(context);
+                      final result = await onPicked(context);
                       // ignore: use_build_context_synchronously
-                      AppLock.of(ctx)?.didUnlock();
+                      if (result != -1) AppLock.of(ctx)?.didUnlock();
                     },
                     icon: Icon(
                       Icons.photo_camera_back_outlined,

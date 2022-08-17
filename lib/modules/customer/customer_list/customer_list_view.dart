@@ -148,7 +148,12 @@ class CustomerListView extends StatelessWidget {
                             const SizedBox(height: AppSizes.smallPadding),
                             SearchCustomerWidget(businessId),
                             const SizedBox(height: AppSizes.exSmallPadding),
-                            Expanded(child: CustomerListWidget(businessId))
+                            Expanded(
+                              child: CustomerListWidget(
+                                businessId: businessId,
+                                customers: controller.dataList,
+                              ),
+                            )
                           ]),
                         ),
                       ),

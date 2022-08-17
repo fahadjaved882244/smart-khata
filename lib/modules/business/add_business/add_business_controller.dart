@@ -47,7 +47,7 @@ class AddBusinessController extends IBaseController {
     update(['UPDATE_FORM']);
   }
 
-  Future<void> pickImage(BuildContext context) async {
+  Future<int> pickImage(BuildContext context) async {
     FocusManager.instance.primaryFocus?.unfocus();
     final result = await showCustomOptionDialog(
       context: context,
@@ -77,6 +77,7 @@ class AddBusinessController extends IBaseController {
 
     isImageLoading = false;
     update(["UPDATE_IMAGE"]);
+    return result;
   }
 
   void removeImage() {

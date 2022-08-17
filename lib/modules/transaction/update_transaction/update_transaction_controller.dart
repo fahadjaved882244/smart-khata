@@ -90,7 +90,7 @@ class UpdateTransactionController extends IBaseController {
     }
   }
 
-  Future<void> pickImage(BuildContext context) async {
+  Future<int> pickImage(BuildContext context) async {
     FocusManager.instance.primaryFocus?.unfocus();
     final result = await showCustomOptionDialog(
       context: context,
@@ -105,12 +105,12 @@ class UpdateTransactionController extends IBaseController {
     if (result == 0) {
       image = await _picker.pickImage(
         source: ImageSource.camera,
-        imageQuality: 10,
+        imageQuality: 15,
       );
     } else if (result == 1) {
       image = await _picker.pickImage(
         source: ImageSource.gallery,
-        imageQuality: 10,
+        imageQuality: 15,
       );
     }
     if (image != null) {
@@ -119,6 +119,7 @@ class UpdateTransactionController extends IBaseController {
     }
     isImageLoading = false;
     update(["UPDATE_IMAGE"]);
+    return result;
   }
 
   void removeImage() {

@@ -1,5 +1,6 @@
 class RouteNames {
   static const String splashScreenView = '/splash_screen_view';
+  static const String fullImageView = '/full_image_view';
 
   static const String phoneAuthView = '/phone_auth_view';
   static const String otpVerificationView = '/otp_verification_view';

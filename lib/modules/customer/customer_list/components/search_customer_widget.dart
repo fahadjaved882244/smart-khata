@@ -26,7 +26,7 @@ class SearchCustomerWidget extends GetView<CustomerListController> {
       },
       child: const CustomTextFormField(
         enabled: false,
-        hintText: "Search customers",
+        hintText: "Search customers...",
         prefixIcon: Icon(Icons.search),
       ),
     );
@@ -76,7 +76,11 @@ class _SearchDelegate extends SearchDelegate {
     if (result.isNotEmpty) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.smallPadding),
-        child: CustomerListWidget(businessId),
+        child: CustomerListWidget(
+          businessId: businessId,
+          customers: result,
+          canSelect: false,
+        ),
       );
     } else {
       return Padding(

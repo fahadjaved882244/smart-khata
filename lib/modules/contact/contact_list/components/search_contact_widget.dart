@@ -30,7 +30,7 @@ class SearchContactWidget extends GetView<ContactListController> {
           child: CustomTextFormField(
             enabled: false,
             fillColor: Theme.of(context).colorScheme.surface,
-            hintText: "Search by name or phone number",
+            hintText: "Search by name, phone...",
             prefixIcon: const Icon(Icons.search),
           ),
         ),
